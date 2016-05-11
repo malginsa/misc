@@ -21,6 +21,12 @@ public  class Trader{
 		this.city = newCity;
 	}
 
+	public Trader clone() {
+		return new Trader(
+			this.getName(),
+			this.getCity());
+	}
+	
 	public String toString(){
 		return "Trader:"+this.name + " in " + this.city;
 	}

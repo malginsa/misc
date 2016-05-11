@@ -92,8 +92,11 @@ public class Practice {
 		// Query 6: Update all transactions so that the traders from Milan are
 		// set to Cambridge.
 		
-		System.out.println("6: ");
-		List<Transaction> transactions6 = new ArrayList<>(transactions);
+		System.out.println("6.1: ");
+		List<Transaction> transactions6 = new ArrayList<>();
+		for (Transaction transaction : transactions) {
+			transactions6.add(transaction.clone());
+		}
 		System.out.println("before " + transactions6);
 //		transactions6.stream()
 //			.filter(trans -> trans.getTrader().getCity().equals("Milan"))
@@ -103,22 +106,34 @@ public class Practice {
 			.filter(trans -> trans.getTrader().getCity().equals("Milan"))
 			// foreach -- transformation and termination operation
 			.forEach(t -> t.getTrader().setCity("Cambridge"));
-
 		System.out.println("after " + transactions6);
-		
-		
-		
+
+		System.out.print( "6.2: " ); 
+//		transactions.stream()
+//			.filter(t -> t.getTrader().getCity().equals("Cambridge"))
+//			.forEach(t -> System.out.print(t.getValue() + " "));
+		transactions.stream()
+			.filter(t -> t.getTrader().getCity().equals("Cambridge"))
+			.map(Transaction::getValue)
+			.forEach(System.out::println);
+		System.out.println();
+
+
 		// Query 7: What's the highest value in all the transactions?
-		
+
 		System.out.println( "7: " + transactions.stream()
-			.mapToInt(t -> t.getValue())
-			.max()
+//			.mapToInt(t -> t.getValue())
+			.mapToInt(Transaction::getValue)
+//			.max()
+//			.reduce((a,b) -> a > b ? a : b)
+			.reduce(Integer::max)
 		);
-		
+
 		// Query 8: Find transaction with a minimum value
 		
 		System.out.println( "8: " + transactions.stream()
-			.reduce((a,b) -> a.getValue() < b.getValue() ? a : b)
+//			.reduce((a,b) -> a.getValue() < b.getValue() ? a : b)
+			.min(Comparator.comparing(Transaction::getValue))
 		);
 	}
 }

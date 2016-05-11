@@ -25,6 +25,13 @@ public class Transaction{
 		return this.value;
 	}
 	
+	public Transaction clone() {
+		return new Transaction(
+			this.getTrader().clone(), 
+			this.getYear(), 
+			this.getValue());
+	}
+	
 	public String toString(){
 	    return "{" + this.trader + ", " +
 	           "year: "+this.year+", " +
