@@ -45,7 +45,11 @@ public class ForkJoinSumCalculator extends RecursiveTask<Long> {
     }
 
     public static long forkJoinSum(long n) {
+
+    	long start = System.nanoTime();
         long[] numbers = LongStream.rangeClosed(1, n).toArray();
+        long duration = (System.nanoTime() - start) / 1_000_000;
+        System.out.println("toArray() took " + duration + " msec");
         ForkJoinTask<Long> task = new ForkJoinSumCalculator(numbers);
         return ParallelStreamsHarness.FORK_JOIN_POOL.invoke(task);
     }
