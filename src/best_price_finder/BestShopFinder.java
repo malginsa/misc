@@ -95,7 +95,8 @@ public class BestShopFinder {
 //		priceList.stream().forEach(s -> System.out.println(s));
 
 		CompletableFuture[] futures = findPricesStream("silence")
-			.map(f -> f.thenAccept(s -> System.out.println(s + " (done in " + ((System.nanoTime()-start) / 1_000_000) + " msecs)")))
+			.map(f -> f.thenAccept(s -> System.out.println(
+				s + " (done in " + ((System.nanoTime()-start) / 1_000_000) + " msecs)")))
 			.toArray(size -> new CompletableFuture[size]);
 		CompletableFuture.allOf(futures).join(); // all the shops
 		// CompletableFuture.anyOf(futures).join(); // only the fastest shop
