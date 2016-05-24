@@ -24,14 +24,18 @@ public class Shop {
 		return name;
 	}
 
-	public String getPrice(String product) {
+	public String getPriceWithDiscount(String product) {
 		double price = calculatePrice(product);
 		Code code = Discount.Code.values()[random.nextInt(
 			Discount.Code.values().length)];
 		return String.format("%s:%.2f:%s", this.name, price, code);
 	}
 
-	private double calculatePrice(String product) {
+	public Double getPrice(String product) {
+		return calculatePrice(product);
+	}
+
+	private Double calculatePrice(String product) {
 		util.Utils.delay(1000);
 		return random.nextDouble() * product.charAt(0) + product.charAt(1);
 	}
