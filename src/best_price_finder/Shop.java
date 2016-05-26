@@ -36,7 +36,7 @@ public class Shop {
 	}
 
 	private Double calculatePrice(String product) {
-		util.Utils.delay(1000);
+		util.Utils.randomDelay();
 		return random.nextDouble() * product.charAt(0) + product.charAt(1);
 	}
 

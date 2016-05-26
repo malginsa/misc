@@ -24,7 +24,7 @@ public class Discount {
     }
 
     private static double apply(double price, Code code) {
-    	Utils.delay(1000);
+    	Utils.randomDelay();
         return Utils.format(price * (100 - code.percentage) / 100);
     }
 

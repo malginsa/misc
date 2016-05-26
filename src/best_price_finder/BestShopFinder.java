@@ -38,25 +38,25 @@ public class BestShopFinder {
 
 	public static List<String> findPrices(String product) {
 
-	List<CompletableFuture<String>> priceFutures = shops.stream()
-		.map(shop -> CompletableFuture.supplyAsync(() -> shop.getPriceWithDiscount(product), executor))
-		.map(future -> future.thenApply(Quote::parse)) // instantaneously computing => can be done synchronously 
-		// thenCompose -- The first and the second CompletableFutures are DEPENDENT 
-		.map(future -> future.thenCompose(quote -> 
-			CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)))
-//		the same
-//		.map(future -> future.thenApplyAsync(Discount::applyDiscount, executor))
-		.collect(Collectors.toList());
-
-	return priceFutures.stream()
-		.map(CompletableFuture::join) // join() - blocking method 
-		.collect(Collectors.toList());
+		List<CompletableFuture<String>> priceFutures = shops.stream()
+			.map(shop -> CompletableFuture.supplyAsync(() -> shop.getPriceWithDiscount(product), executor))
+			.map(future -> future.thenApply(Quote::parse)) // instantaneously computing => can be done synchronously 
+			// thenCompose -- The first and the second CompletableFutures are DEPENDENT 
+			.map(future -> future.thenCompose(quote -> 
+				CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)))
+			// the same
+			// .map(future -> future.thenApplyAsync(Discount::applyDiscount, executor))
+			.collect(Collectors.toList());
+	
+		return priceFutures.stream()
+			.map(CompletableFuture::join) // join() - blocking method 
+			.collect(Collectors.toList());
 	}
 
 	public static List<String> findPricesInUSD(String product) {
 		
         List<CompletableFuture<Double>> priceFutures = new ArrayList<>();
-        
+
 		for (Shop shop : shops) {
             CompletableFuture<Double> futurePriceInUSD = 
             	CompletableFuture.supplyAsync(
@@ -78,19 +78,37 @@ public class BestShopFinder {
 		return prices;
 	}
 
-	public Stream<CompletableFuture<String>> findPricesStream (String product) {
+	public static Stream<CompletableFuture<String>> findPricesStream (String product) {
 		return shops.stream()
-			.map(shop -> CompletableFuture.supplyAsync(() -> shop.getPriceWithDiscount(product), executor))
+			.map(shop -> CompletableFuture.supplyAsync(
+				() -> shop.getPriceWithDiscount(product), executor))
 			.map(future -> future.thenApply(Quote::parse))
-			.map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)));
+			.map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(
+				() -> Discount.applyDiscount(quote), executor)));
 	}
-	
+
 	public static void main(String[] args) {
 
 		long start = System.nanoTime();
-		List<String> priceList = findPricesInUSD("silence");
-		priceList.stream()
-			.forEach(s -> System.out.println(s));
+
+//		List<String> priceList = findPricesInUSD("silence");
+//		priceList.stream().forEach(s -> System.out.println(s));
+
+		CompletableFuture[] futures = findPricesStream("silence")
+			.map(f -> f.thenAccept(s -> System.out.println(
+				s + " (done in " + ((System.nanoTime()-start) / 1_000_000) + " msecs)")))
+			.toArray(size -> new CompletableFuture[size]);
+		CompletableFuture.allOf(futures).join(); // all the shops
+		// CompletableFuture.anyOf(futures).join(); // only the fastest shop
+		
+		// the same result
+//		List<CompletableFuture<Void>> futures = findPricesStream("silence")
+//			.map(future -> future.thenAccept(System.out::println))
+//			.collect(Collectors.toList());
+//		futures.stream()
+//			.map(CompletableFuture::join)
+//			.collect(Collectors.toList());
+
 		long duration = (System.nanoTime() - start) / 1_000_000;
 		System.out.println("Done in "+ duration +" msecs");
 	}
