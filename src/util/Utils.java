@@ -20,8 +20,8 @@ public class Utils {
 		}
 	}
 
-	static public void randomDelay() {
-		int delay = 500 + random.nextInt(2000);
+	static public void randomDelay(int permanent, int variable) {
+		int delay = permanent + random.nextInt(variable);
 		try {
 			Thread.sleep(delay);
 		} catch (InterruptedException e) {
@@ -29,6 +29,14 @@ public class Utils {
 		}
 	}
 
+	static public void randomDelay(int variable) {
+		randomDelay(0, variable);
+	}
+
+	static public void randomDelay() {
+		randomDelay(500, 2000);
+	}
+	
     public static double format(double number) {
         synchronized (formatter) {
             return new Double(formatter.format(number));
