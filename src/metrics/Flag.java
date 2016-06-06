@@ -2,7 +2,7 @@ package metrics;
 
 public class Flag {
 
-	private boolean flag;
+	private volatile boolean flag;
 
 	public Flag(boolean initFlag) {
 		this.flag = initFlag;

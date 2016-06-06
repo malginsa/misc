@@ -2,22 +2,15 @@ package metrics;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Semaphore;
 
-import util.Utils;
-
-import static util.Utils.hardWorkSimulation;
-
-public class MetricsQueue {
+public class MetricsSimpleQueue {
 
 	public static void main(final String[] args) {
 
-		MetricsQueue metrics = new MetricsQueue();
+		MetricsSimpleQueue metrics = new MetricsSimpleQueue();
 
 		Instant start = Instant.now();
 		metrics.doWork();
@@ -35,15 +28,15 @@ public class MetricsQueue {
 		ReferenceSequence sequence = new ReferenceSequence();
 
 		Flag isProcessingCompleted = new Flag(false);
-		BlockingQueue<CompletableFuture<Integer>> queue = new LinkedBlockingQueue<>(3);
+		BlockingQueue<CompletableFuture<Integer>> queue = new LinkedBlockingQueue<>(1);
 
 		CompletableFuture<Long> summator = CompletableFuture
 			.supplyAsync(() -> {
 				long sum = 0;
-				while (!isProcessingCompleted.isFlag() || !queue.isEmpty()) {
+				while (!isProcessingCompleted.isFlag()) {
 					try {
-						if (isProcessingCompleted.isFlag()) System.out.println("flag = " + isProcessingCompleted.isFlag());
-//						if(queue.isEmpty()) System.err.println("queue is empty");
+//						if (isProcessingCompleted.isFlag()) System.out.println("flag = " + isProcessingCompleted.isFlag());
+						if(queue.isEmpty()) System.out.println("queue is empty");
 //						System.out.println("taking..");
 						CompletableFuture<Integer> processCF = queue.take();
 //						System.out.println("taken");
@@ -53,7 +46,7 @@ public class MetricsQueue {
 						e.printStackTrace();
 					}
 				}
-				System.out.println("summator has finished");
+				System.out.println("summator finished");
 				return sum;
 			});
 

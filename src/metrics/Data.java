@@ -5,9 +5,10 @@ import java.util.Random;
 
 public class Data implements Iterable<Record> {
 
-//	public static final int MAX = 1_000_000; // количество ридов
+//	public static final int MAX = 10_000_000; // количество ридов
+//	public static final int MAX = 7; // количество ридов
 	public static final int MAX = 100; // количество ридов
-	public static final int READ_SIZE = 1000;
+	public static final int READ_SIZE = 500;
 	private static final Random random = new Random();
 
 	private static final char[] LETTERS = {'A','C','G','T'};

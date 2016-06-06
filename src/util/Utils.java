@@ -2,6 +2,8 @@ package util;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Random;
 
@@ -43,4 +45,25 @@ public class Utils {
         }
     }
 
+	public static int hardWorkSimulation(int length) {
+		final Random random = new Random();
+		int ret = 0;
+		for (int i = 0; i < length; i++) {
+			ret += random.nextInt();
+		}
+		return ret;
+	}
+
+	public static void main(String[] args) {
+
+		Instant start = Instant.now();
+
+		final int ret = hardWorkSimulation(100_000_000);
+		System.out.println("ret = " + ret);
+
+		Instant stop = Instant.now();
+		Duration d = Duration.between(start, stop);
+		System.out.println("Elapsed: " + d.toMillis()/1000. + " sec");
+
+	}
 }
