@@ -6,11 +6,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class MetricsSimpleQueue {
+public class MetricsQueuePoisonPill {
 
+	private static Integer QUEUE_SIZE = 77;
+	
 	public static void main(final String[] args) {
 
-		MetricsSimpleQueue metrics = new MetricsSimpleQueue();
+		MetricsQueuePoisonPill metrics = new MetricsQueuePoisonPill();
 
 		Instant start = Instant.now();
 		metrics.doWork();
@@ -27,26 +29,22 @@ public class MetricsSimpleQueue {
 		Data data = new Data();
 		ReferenceSequence sequence = new ReferenceSequence();
 
-		Flag isProcessingCompleted = new Flag(false);
-		BlockingQueue<CompletableFuture<Integer>> queue = new LinkedBlockingQueue<>(1);
+		BlockingQueue<CompletableFuture<Integer>> queue = 
+			new LinkedBlockingQueue<>(QUEUE_SIZE);
 
 		CompletableFuture<Long> summator = CompletableFuture
 			.supplyAsync(() -> {
 				long sum = 0;
-				while (!isProcessingCompleted.isFlag()) {
+				while (true) {
 					try {
-//						if (isProcessingCompleted.isFlag()) System.out.println("flag = " + isProcessingCompleted.isFlag());
-						if(queue.isEmpty()) System.out.println("queue is empty");
-//						System.out.println("taking..");
 						CompletableFuture<Integer> processCF = queue.take();
-//						System.out.println("taken");
-						sum += processCF.get();
-//						hardWorkSimulation(100_000);
+						Integer resultCF = processCF.get();
+						if (null == resultCF) break;
+						sum += resultCF;
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
-				System.out.println("summator finished");
 				return sum;
 			});
 
@@ -55,17 +53,19 @@ public class MetricsSimpleQueue {
 			Reference ref = sequence.getRef(record);
 
 			try {
-//				System.out.println("putting..");
-				queue.put(CompletableFuture.supplyAsync(() -> process(record, ref)));
-//				System.out.println("put");
-//				hardWorkSimulation(100_000_000);
+				queue.put(CompletableFuture.supplyAsync(
+					() -> process(record, ref)));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
 		}
 
-		isProcessingCompleted.setFlag(true);
+		try {
+			queue.put(CompletableFuture.supplyAsync(() -> null));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("summ = " + summator.join());
 

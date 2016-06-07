@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class Data implements Iterable<Record> {
 
-//	public static final int MAX = 10_000_000; // количество ридов
-//	public static final int MAX = 7; // количество ридов
-	public static final int MAX = 100; // количество ридов
+	public static final int MAX = 100_000; // количество ридов
+//	public static final int MAX = 100;
+//	public static final int MAX = 7;
 	public static final int READ_SIZE = 500;
 	private static final Random random = new Random();
 
