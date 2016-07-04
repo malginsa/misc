@@ -28,7 +28,7 @@ public class DaemonOrNot {
 						@Override
 						public Thread newThread(Runnable r) {
 							Thread thread = new Thread(r);
-							thread.setDaemon(true); // prevent the termination of the main
+							thread.setDaemon(true); // prevent the termination of the Main
 							return thread;
 					}
 				});

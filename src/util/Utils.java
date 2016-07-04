@@ -54,6 +54,15 @@ public class Utils {
 		return ret;
 	}
 
+    // return seconds, taken to run operation
+	public static double timeMeasurement(Runnable operation) {
+		Instant timeStampStart = Instant.now();
+		operation.run();
+		Instant timeStampFinish = Instant.now();
+		return Duration.between(timeStampStart, timeStampFinish).toMillis()/1000.;
+
+	}
+
 	public static void main(String[] args) {
 
 		Instant start = Instant.now();

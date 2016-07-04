@@ -1,12 +1,9 @@
-package elc;
+package elc.async_reading;
 
 import util.Utils;
 
 import java.util.Arrays;
 
-/**
- * Created by msa on 05.06.16.
- */
 public class DNARead {
 
     private byte[] data;

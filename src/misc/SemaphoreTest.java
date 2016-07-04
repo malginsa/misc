@@ -16,7 +16,7 @@ import util.Utils;
 
 public class SemaphoreTest {
 
-	private static final int ARRAY_SIZE = 10; 
+	private static final int ARRAY_SIZE = 4; 
 	private static final int BLOCK_SIZE = 3;
 	private static final int CNT_BLOCKS = ARRAY_SIZE / BLOCK_SIZE;
 	private static final int REMAINED = ARRAY_SIZE % BLOCK_SIZE;
