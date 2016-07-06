@@ -1,26 +1,39 @@
 package elc.duplicates;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class BruteForce {
+public class BruteForce implements Algorithms{
+
+    private Reads reads;
+
+    private Histo histo;
+
+    public BruteForce(Reads reads, Histo histo) {
+        this.reads = reads;
+        this.histo = histo;
+    }
+
+    public Histo getHisto() {
+        return histo;
+    }
 
     // O(n*n)
-    public static void accept2(String[] reads, double maxDiffRate, Histo histo) {
+    public void process() {
 
-        for (int i = 0; i < reads.length; ++i) {
-            final String lhs = reads[i];
+        final List<Read> readsList = reads.getReadsList();
+        for (int i = 0; i < readsList.size(); ++i) {
+            final Read lhs = readsList.get(i);
             if (lhs == null) continue;
-            final List<String> dupes = new ArrayList<>();
+            final List<Read> dupes = new ArrayList<>();
 
-            for (int j = i + 1; j < reads.length; ++j) {
-                final String rhs = reads[j];
+            for (int j = i + 1; j < readsList.size(); ++j) {
+                final Read rhs = readsList.get(j);
                 if (rhs == null) continue;
 
-                if (isReadsMatch(lhs, rhs, maxDiffRate)) {
+                if (isReadsMatch(lhs, rhs)) {
                     dupes.add(rhs);
-                    reads[j] = null;
+                    readsList.set(j, null);
                 }
             }
 
@@ -36,13 +49,15 @@ public class BruteForce {
 
     }
 
-    private static boolean isReadsMatch(final String lhs, final String rhs, double maxDiffRate) {
+    private boolean isReadsMatch(final Read lhs, final Read rhs) {
 
-        final int readLength = Math.min(lhs.length(), rhs.length());
-        int maxErrors = (int) Math.floor((readLength) * maxDiffRate);
+        final String lNucleotides = lhs.getNucleotides();
+        final String rNucleotides = rhs.getNucleotides();
+        final int minLength = Math.min(lhs.length(), rhs.length());
+        int maxErrors = (int) Math.floor((minLength) * reads.getMAX_DIFF_RATE());
         int errors = 0;
-        for (int i = 0; i < readLength; ++i) {
-            if (lhs.charAt(i) != rhs.charAt(i) && ++errors > maxErrors) {
+        for (int i = 0; i < minLength; ++i) {
+            if (lNucleotides.charAt(i) != rNucleotides.charAt(i) && ++errors > maxErrors) {
                 return false;
             }
         }

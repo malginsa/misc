@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class FileReadsUtils {
@@ -35,6 +32,17 @@ public class FileReadsUtils {
                 .toArray(size -> new String[size]);
     }
 
+    // get limited list of reads only of max Length
+    public static List<Read> getLimited(String fileName, int limit) {
+        final String[] allReads = getOnlyMaxLengthReads(fileName);
+        // Crop the array of reads by MAX_READS
+        List<Read> cropped = new ArrayList<>();
+        final int READS_COUNT = limit;
+        Arrays.stream(allReads)
+                .limit(READS_COUNT)
+                .forEach(s -> cropped.add(new Read(s)));
+        return cropped;
+    }
 
     // get stream of reads from file fileName
     public static Stream<String> getReadsStream (String fileName) {

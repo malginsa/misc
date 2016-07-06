@@ -33,9 +33,4 @@ public class ReadTest {
         assertNotEquals(read1.getHash(1), read3.getHash(1));
     }
 
-    @Test
-    public void findDplicatesTest() {
-
-    }
-
 }

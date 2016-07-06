@@ -26,7 +26,7 @@ public class Read {
         return this.hashes[BAND_INDEX];
     }
 
-    public String getHashesAsString() {
+    public String hashesToString() {
         String res = "";
         for (int i = 0; i < hashes.length; i++) {
             res += hashes[i] + " ";
@@ -37,16 +37,13 @@ public class Read {
     // hashes the read
     public void calculateHashes(int BANDS_LENGTH) {
 
-        // bands count for this read
-        final int BANDS_COUNT = (int) Math.ceil((float) this.length() / BANDS_LENGTH);
-
+        final int BANDS_COUNT = this.length() / BANDS_LENGTH;
         this.hashes = new int[BANDS_COUNT];
         char[] cread = this.nucleotides.toCharArray();
-        IntStream.range(0, BANDS_COUNT)
-                .forEach(i -> {
-                    final char[] chars = Arrays.copyOfRange(cread, i * BANDS_LENGTH, (i + 1) * BANDS_LENGTH);
-                    this.hashes[i] = new String(chars).hashCode();
-                });
+        for (int i = 0; i < BANDS_COUNT; i++) {
+            final char[] chars = Arrays.copyOfRange(cread, i * BANDS_LENGTH, (i + 1) * BANDS_LENGTH);
+            this.hashes[i] = new String(chars).hashCode();
+        }
     }
 
     public int length() {
@@ -55,10 +52,6 @@ public class Read {
 
     @Override
     public String toString() {
-//        return "Read{" +
-//                "nucleotides='" + nucleotides + '\'' +
-//                ", hashes=" + Arrays.toString(hashes) +
-//                '}';
         return this.nucleotides;
     }
 }

@@ -2,6 +2,7 @@ package elc.duplicates;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Histo {
 
@@ -9,18 +10,22 @@ public class Histo {
     private Map<Integer, Integer> gramma;
 
     public Histo() {
-        gramma = new HashMap<>();
+        gramma = new TreeMap<>();
     }
 
     // Increments the value in the designated bin by 1.
-    public void increment(int bin) {
-        Integer count = gramma.get(bin);
-        if (null == count) {
-            count = 1;
+    public void increment(int bin, int count) {
+        Integer countInBin = gramma.get(bin);
+        if (null == countInBin) {
+            countInBin = count;
         } else {
-            count++;
+            countInBin += count;
         }
-        gramma.put(bin, count);
+        gramma.put(bin, countInBin);
+    }
+
+    public void increment(int bin) {
+        this.increment(bin, 1);
     }
 
     // return total count of all items
@@ -34,7 +39,9 @@ public class Histo {
 
     @Override
     public String toString() {
-        return gramma.toString();
+        return gramma.toString()
+                + "  total = "
+                + this.getTotal();
     }
 
     public static void main(String[] args) {
@@ -44,6 +51,7 @@ public class Histo {
         histo.increment(1);
         histo.increment(3);
         histo.increment(5);
+        histo.increment(3, 2);
 
         System.out.println(histo);
     }
