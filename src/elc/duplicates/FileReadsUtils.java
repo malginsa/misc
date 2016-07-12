@@ -79,7 +79,7 @@ public class FileReadsUtils {
                 });
 
         System.out.println(fileName);
-        System.out.println("    lines count: " + countLines);
+        System.out.println("    lines next_id: " + countLines);
         System.out.println("    distinct lines: " + distinct);
         System.out.println("    max length: " + maxLength);
         System.out.println("    min length: " + minLength);

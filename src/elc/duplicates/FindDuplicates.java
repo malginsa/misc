@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FindDuplicates {
 
-    public static void doFind(Reads reads, Class algorithms) throws Exception{
+    public static Histo doFind(Reads reads, Class algorithms) throws Exception{
 
         Histo histo = new Histo();
         final Constructor constructor = algorithms.getDeclaredConstructor(Reads.class, Histo.class);
@@ -17,23 +17,28 @@ public class FindDuplicates {
         System.out.println(algorithms.getSimpleName());
         System.out.println(histo);
         System.out.println("elapsed: " + elapsed + " secs");
-
+        return histo;
     }
 
     public static void main(String[] args) throws Exception {
 
-//        final String fileName = "/media/msa/small/elc_data/txt/CoverageBam_first_1_000_000_nukleotides.txt";
-        final String fileName = "/media/msa/small/elc_data/txt/other_100_000_reads.txt";
+//        final String fileName = "/media/msa/small/elc_data/txt/CoverageBam_first_1_000_000_reads.txt";
+        final String fileName = "/media/msa/small/elc_data/txt/other_100_000_reads_sorted.txt";
         final double maxDiffRate = 0.03;
-        final int readsLimit = 50_000;
+        final int readsLimit = 10000;
 
-        List<Read> readsList = FileReadsUtils.getLimited(fileName, readsLimit);
-        Reads reads = new Reads(readsList, maxDiffRate);
-        doFind(reads, BruteForce.class);
+        List<Read> readsList;
+        Reads reads;
 
         readsList = FileReadsUtils.getLimited(fileName, readsLimit);
         reads = new Reads(readsList, maxDiffRate);
-        doFind(reads, KateAlgorithm.class);
+        Histo histo2 = doFind(reads, KateAlgorithm.class);
+
+        readsList = FileReadsUtils.getLimited(fileName, readsLimit);
+        reads = new Reads(readsList, maxDiffRate);
+        Histo histo1 = doFind(reads, BruteForce.class);
+
+        System.out.println("histos equality: " + histo1.equals(histo2));
 
     }
 }

@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 public class Histo {
 
-    // key - bin, value - count items in bin
+    // key - bin, value - next_id items in bin
     private Map<Integer, Integer> gramma;
 
     public Histo() {
@@ -28,7 +28,7 @@ public class Histo {
         this.increment(bin, 1);
     }
 
-    // return total count of all items
+    // return total next_id of all items
     public int getTotal() {
         int value = 0;
         for (Map.Entry<Integer, Integer> entry : gramma.entrySet()) {
@@ -42,6 +42,17 @@ public class Histo {
         return gramma.toString()
                 + "  total = "
                 + this.getTotal();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Histo other = (Histo) obj;
+
+        return gramma != null ? gramma.equals(other.gramma) : other.gramma == null;
+
     }
 
     public static void main(String[] args) {

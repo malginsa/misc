@@ -1,16 +1,31 @@
 package elc.duplicates;
 
 import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.util.Comparator;
 
-public class Read {
+public class Read implements Comparable{
+
+    private int id;
 
     private String nucleotides;
 
     private int[] hashes = null;
 
+
+    static int next_id = 0;
+
+
     public Read(String nucleotides) {
         this.nucleotides = nucleotides;
+        this.id = next_id++;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNucleotides() {
@@ -54,4 +69,27 @@ public class Read {
     public String toString() {
         return this.nucleotides;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return nucleotides.hashCode();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Read other = (Read) o;
+        return Integer.compare(this.getId(), other.getId());
+    }
+
+//    @Override
+//    public int compare(Read read1, Read read2) {
+//        return Integer.compare(read1.getId(), read2.getId());
+//    }
+
 }

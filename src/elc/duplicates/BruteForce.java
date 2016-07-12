@@ -31,7 +31,7 @@ public class BruteForce implements Algorithms{
                 final Read rhs = readsList.get(j);
                 if (rhs == null) continue;
 
-                if (isReadsMatch(lhs, rhs)) {
+                if (matchesBruteForce(lhs, rhs, reads.getMAX_DIFF_RATE())) {
                     dupes.add(rhs);
                     readsList.set(j, null);
                 }
@@ -47,21 +47,6 @@ public class BruteForce implements Algorithms{
             }
         }
 
-    }
-
-    private boolean isReadsMatch(final Read lhs, final Read rhs) {
-
-        final String lNucleotides = lhs.getNucleotides();
-        final String rNucleotides = rhs.getNucleotides();
-        final int minLength = Math.min(lhs.length(), rhs.length());
-        int maxErrors = (int) Math.floor((minLength) * reads.getMAX_DIFF_RATE());
-        int errors = 0;
-        for (int i = 0; i < minLength; ++i) {
-            if (lNucleotides.charAt(i) != rNucleotides.charAt(i) && ++errors > maxErrors) {
-                return false;
-            }
-        }
-        return true;
     }
 
 }

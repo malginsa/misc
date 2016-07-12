@@ -2,10 +2,7 @@ package elc.duplicates;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -33,4 +30,28 @@ public class ReadTest {
         assertNotEquals(read1.getHash(1), read3.getHash(1));
     }
 
+    @Test
+    public void sortTest() {
+        Read read1 = new Read("C");
+        Read read2 = new Read("T");
+        Read read3 = new Read("A");
+        List<Read> list = new ArrayList<>();
+        list.add(read2);
+        list.add(read1);
+        list.add(read3);
+        System.out.println(list);
+
+        Map<Integer, List<Read>> map = new HashMap<>();
+        map.put(0, list);
+
+        for (List<Read> readList : map.values()) {
+            readList.sort(new Comparator<Read>() {
+                @Override
+                public int compare(Read read1, Read read2) {
+                    return Integer.compare(read1.getId(), read2.getId());
+                }
+            });
+        }
+        System.out.println(list);
+    }
 }
