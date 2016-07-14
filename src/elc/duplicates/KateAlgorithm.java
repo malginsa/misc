@@ -20,19 +20,38 @@ public class KateAlgorithm implements Algorithms{
 
     public void process() {
 
-        Map<Read, List<Read>> candidates = this.findCandidates();
+        // value: Set<Read>
+//        Map<Read, List<Read>> candidates = this.findCandidatesByBands();
+        Map<Read, List<Read>> candidates = this.findCandidatesByReads();
 //        Map<Read, List<Read>> candidates = this.findCandidatesBruteForce();
 //        Map<Read, List<Read>> candidates = this.allCandidates();
-
-//        candidates = this.sortKeys(candidates);
-//        this.checkKeysOrder(candidates);
 
         // TODO: really neccessary?
 //        this.sortCandidates(candidates);
 
-        this.checkOrderOfCandidates(candidates);
+//        this.checkOrderOfCandidates(candidates);
 
         createHisto(candidates);
+    }
+
+
+    // key - read, value - it's candidates
+    private Map<Read, List<Read>> findCandidatesByBands() {
+
+        Map<Read, List<Read>> candidatesTotal = new LinkedHashMap<>();
+
+        for(int band = 0; band < reads.getMAX_BANDS_COUNT(); band++) {
+            final Map<Integer, List<Read>> readsByHash = groupReadsByBand(band);
+            this.checkOrderOfGroup(readsByHash);
+            // accumulate found candidates
+            for ( List<Read> value : readsByHash.values()) {
+                for (int i = 0; i < value.size(); i++) {
+                    this.addGroupOfCandidates(candidatesTotal, value, i);
+                }
+
+            }
+        }
+        return candidatesTotal;
     }
 
 
@@ -75,168 +94,159 @@ public class KateAlgorithm implements Algorithms{
     }
 
 
-    // key - read, value - it's candidates
-    private Map<Read, List<Read>> findCandidates() {
+    private Map<Read, List<Read>> findCandidatesByReads() {
 
         Map<Read, List<Read>> candidatesTotal = new LinkedHashMap<>();
-//        Map<Read, List<Read>> candidatesTotal = new HashMap<>();
-
-        for(int band = 0; band < reads.getMAX_BANDS_COUNT(); band++) {
-
-            // TODO: band >= read's band next_id
-            final Map<Integer, List<Read>> readsByHash = groupReadsByHash(band);
-
-            this.checkOrderOfGroup(readsByHash);
-
-            // accumulate found candidates
-            for ( List<Read> value : readsByHash.values()) {
-                for (int i = 0; i < value.size() - 1; i++) {
-                    this.addListOfCandidates(candidatesTotal, value, i);
-                }
-
+        // fill up keys-reads to preserve order of reads
+        for (Read read : reads.getReadsList()) {
+            candidatesTotal.put(read, null);
+        }
+        final Map<Integer, List<Read>> groups = groupsByReads();
+        this.checkOrderOfGroup(groups);
+        System.out.println("groups are filled up");
+        for ( List<Read> group : groups.values()) {
+            if (group.size() <= 1) {
+                continue;
+            }
+            for (int readIndex = 0; readIndex < group.size() - 1; readIndex++) {
+                this.addGroupOfCandidates(candidatesTotal, group, readIndex);
             }
         }
         return candidatesTotal;
     }
 
 
-    // add candidates from list[first+1 .. size-1] to candidatesTotal, where key is list.get(first)
-    private void addListOfCandidates(Map<Read, List<Read>> candidatesTotal,
-                                     List<Read> list, int firstIndex) {
-        final Read first = list.get(firstIndex);
-        List<Read> candidates = candidatesTotal.get(first);
-        if (null == candidates) {
-            candidates = new ArrayList<>();
-            candidatesTotal.put(first, candidates);
-        }
-        for (int i = firstIndex + 1; i < list.size(); i++) {
-            final Read candidate = list.get(i);
-            if (!candidates.contains(candidate)) {
-                candidates.add(candidate);
+    private Map<Integer, List<Read>> groupsByReads() {
+
+        Map<Integer, List<Read>> groupsByHash = new LinkedHashMap<>();
+        for (Read read : reads.getReadsList()) {
+            for (int band = 0; band < reads.getMAX_BANDS_COUNT(); band++) {
+                final int hash = read.getHash(band);
+                this.addReadToHashGroup(read, hash, groupsByHash);
             }
         }
+        return groupsByHash;
     }
 
 
-//    private void _addCandidate(Map<Read, List<Read>> candidatesTotal, Read read, Read candidate) {
-//        List<Read> candidates = candidatesTotal.get(read);
-//        if (null == candidates) {
-//            candidates = new ArrayList<>();
-//            candidatesTotal.put(read, candidates);
-//        }
-//        if (!candidates.contains(candidate)) {
-//            candidates.add(candidate);
-//        }
-//    }
-
-
-    // return candidates Map sorted by keys
-    private Map<Read, List<Read>> sortKeys(Map<Read, List<Read>> candidates) {
-
-        final Set<Read> keySet = candidates.keySet();
-        final Read[] keys = keySet.stream().toArray(size -> new Read[size]);
-        Arrays.sort(keys);
-        Map<Read, List<Read>> result = new LinkedHashMap<>();
-        for (int i = 0; i < keys.length; i++) {
-            Read key = keys[i];
-            final List<Read> value = candidates.get(key);
-            result.put(key, value);
+    private void addReadToHashGroup(Read read, int hash,
+                                    Map<Integer, List<Read>> groupsByHash) {
+        List<Read> readsList = groupsByHash.get(hash);
+        if (null == readsList) {
+            readsList = new ArrayList<Read>();
+            groupsByHash.put(hash, readsList);
         }
-        System.out.println("Map has sorted by keys");
-        return result;
-
+        if (!readsList.contains(read)) {
+            readsList.add(read);
+        }
     }
 
 
-    // sort each list, due to match results to ELC
-    private void sortCandidates(Map<Read, List<Read>> candidates) {
+    // add candidates from group[first+1 .. size-1] to candidatesTotal, where key is group.get(first)
+    private void addGroupOfCandidates(Map<Read, List<Read>> candidatesTotal,
+                                      List<Read> group, int keyIndex) {
+        final Read key = group.get(keyIndex);
+        List<Read> candidatesOfKey = candidatesTotal.get(key);
+        if (null == candidatesOfKey) {
+            candidatesOfKey = new ArrayList<>();
+            candidatesTotal.put(key, candidatesOfKey);
+        }
+        for (int i = keyIndex + 1; i < group.size(); i++) {
+            final Read read = group.get(i);
+            if (read.equals(key)) {
+                continue;
+            }
+            if (candidatesOfKey.contains(read)) {
+                continue;
+            }
+            candidatesOfKey.add(read);
+        }
+    }
 
-//        this.checkSorted(candidates);
-        for (List<Read> readList : candidates.values()) {
-            readList.sort(new Comparator<Read>() {
-                @Override
-                public int compare(Read read1, Read read2) {
-                    return Integer.compare(read1.getId(), read2.getId());
-                }
-            });
+
+    // groups reads depend of band's values
+    // key - hash value of band, value - list of reads which hash's value equals key
+    private Map<Integer, List<Read>> groupReadsByBand(int bandNumber) {
+
+        Map<Integer, List<Read>> readsByHash = new LinkedHashMap<>();
+        for (int i = 0; i < reads.getReadsList().size(); i++) {
+            final Read read = reads.getReadsList().get(i);
+            final int hash = read.getHash(bandNumber);
+            this.addReadToHashGroup(read, hash, readsByHash);
         }
-        for (List<Read> readList : candidates.values()) {
-            this.checkOrderOfList(readList, "  invoked from sortCandidates");
-        }
+        return readsByHash;
     }
 
 
     private void checkOrderOfCandidates(Map<Read, List<Read>> candidates) {
 
-        for (Map.Entry<Read, List<Read>> entry : candidates.entrySet()) {
-            final List<Read> value = entry.getValue();
-//            this.checkOrderOfList(value, "  invoked from checkOrderOfCandidates");
-            final Read key = entry.getKey();
-            final Read candidate1 = value.get(0);
-            if (key.getId() >= candidate1.getId()) {
-                System.out.println("checkOrderOfCandidates fault");
-                return;
+        // check order of keys
+        final Read[] keys = candidates.keySet().toArray(new Read[0]);
+        for (int i = 0; i < keys.length - 1; i++) {
+            if (keys[i].getId() >= keys[i + 1].getId()) {
+                System.out.println("keys order fault:  " + keys[i].getId() + " >= " + keys[i + 1].getId());
             }
         }
-        System.out.println("checkOrderOfCandidates ok");
+
+        // check order of every key and first read from value
+        for (Map.Entry<Read, List<Read>> entry : candidates.entrySet()) {
+            final List<Read> value = entry.getValue();
+            if (null == value) {
+                continue;
+            }
+            if (value.size() < 1) {
+                System.out.println("WARNING:  empty listReads detected");
+            }
+            final Read first = value.get(0);
+            if (entry.getKey().getId() >= first.getId()) {
+                System.out.println("check Order Of Candidates fault  id: " + entry.getKey().getId());
+            }
+        }
+        System.out.println("check Order Of Candidates ok");
     }
 
 
     private void checkOrderOfList(List<Read> list, String message) {
         for (int i = 0; i < list.size() - 1; i++) {
-             if (list.get(i).getId() >= list.get(i+1).getId()) {
-                 System.out.println("list doesn't ordered: "
-                         + list.get(i).getId() + " >= " + list.get(i+1).getId()
-                         + message);
-             }
+            if (list.get(i).getId() >= list.get(i+1).getId()) {
+                System.out.println("list doesn't ordered: "
+                        + list.get(i).getId() + " >= " + list.get(i+1).getId()
+                        + message);
+            }
         }
     }
 
 
-    // each list must be ordered; and the first read in each group must be in increasing order
-    private void checkOrderOfGroup(Map<Integer, List<Read>> candidates) {
+    private void checkNotStrictOrderOfList(List<Read> list, String message) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            if (list.get(i).getId() > list.get(i+1).getId()) {
+                System.out.println("list doesn't ordered: "
+                        + list.get(i).getId() + " >= " + list.get(i+1).getId()
+                        + message);
+            }
+        }
+    }
+
+
+    // each list must be ordered; and the first read in each group must be not strictly ordered(duplicates allowed)
+    private void checkOrderOfGroup(Map<Integer, List<Read>> groups) {
 
         // check order of first reads
         List<Read> firsts = new ArrayList<>();
-        for (List<Read> readList : candidates.values()) {
+        for (List<Read> readList : groups.values()) {
             firsts.add(readList.get(0));
         }
-        this.checkOrderOfList(firsts, "  invoked from checkOrderOfGroup: check firsts");
+        this.checkNotStrictOrderOfList(firsts, "  checkOrderOfGroup: dupes in firsts detected");
 
         // check order of each list
-        for (List<Read> readList : candidates.values()) {
-            this.checkOrderOfList(readList, "  invoked from checkOrderOfGroup: check list of group");
+        for (List<Read> readList : groups.values()) {
+            this.checkOrderOfList(readList, "  checkOrderOfGroup: dupes in group detected");
         }
     }
-
-
-
-
-    // groups reads depend of band's values
-    // key - hash value of band, value - list of reads which hash's value equals key
-    private Map<Integer, List<Read>> groupReadsByHash(int bandNumber) {
-
-        Map<Integer, List<Read>> readsByHash = new LinkedHashMap<>();
-
-        // TODO: parallel ? - NO order of reads have to be preserved
-        for (int i = 0; i < reads.getReadsList().size(); i++) {
-            final Read read = reads.getReadsList().get(i);
-            final int hash = read.getHash(bandNumber);
-            List<Read> readsList = readsByHash.get(hash);
-            if (null == readsList) {
-                readsList = new ArrayList<Read>();
-                readsByHash.put(hash, readsList);
-            }
-            readsList.add(read);
-        }
-
-        return readsByHash;
-    }
-
 
     // actually, a bit slowly than matchesBruteForce
     // TODO: to optimize
-    public boolean matchesUsingHashes(Read left, Read right) {
+    public boolean matchesUsingHashes(Read left, Read right, double maxDiffRate) {
 
         int errors = 0;
         // compare by hashes
@@ -252,7 +262,7 @@ public class KateAlgorithm implements Algorithms{
         final char[] leftNucleotides = left.getNucleotides().toCharArray();
         final char[] rightNucleotides = right.getNucleotides().toCharArray();
         final int minLength = Math.min(left.length(), right.length());
-        int maxErrors = (int) Math.floor(minLength * reads.getMAX_DIFF_RATE());
+        int maxErrors = (int) Math.floor(minLength * maxDiffRate);
         while (index < minLength) {
 
             if (index % reads.getBAND_LENGTH() == 0) {
@@ -275,6 +285,7 @@ public class KateAlgorithm implements Algorithms{
 
     // every read's candidates list consists of every other read
     public Map<Read, List<Read>> allCandidates() {
+
         Map<Read, List<Read>> candidatesTotal = new LinkedHashMap<>();
         for (Read read : reads.getReadsList()) {
             List<Read> list = new ArrayList<>();
@@ -290,26 +301,31 @@ public class KateAlgorithm implements Algorithms{
 
 
     private void createHisto(Map<Read, List<Read>> candidates) {
-        List<Read> dupesList = new ArrayList<>();
-        // dupes next_id among candidates
+
+        Set<Read> dupesList = new HashSet<>();
         int dupes;
-        for (Read read : candidates.keySet()) {
-            if (dupesList.contains(read)) {
+        for (Map.Entry<Read, List<Read>> entry : candidates.entrySet()) {
+            final Read key = entry.getKey();
+            if (dupesList.contains(key)) {
+                continue;
+            }
+            final List<Read> value = entry.getValue();
+            if (null == value) {
                 continue;
             }
             dupes = 0;
-            for (Read candidate : candidates.get(read)) {
+            for (Read candidate : value) {
                 if (!dupesList.contains(candidate) &&
-                        matchesBruteForce(read, candidate, this.reads.getMAX_DIFF_RATE()))
+                        matchesBruteForce(key, candidate, this.reads.getMAX_DIFF_RATE()))
+//                        matchesUsingHashes(key, candidate, this.reads.getMAX_DIFF_RATE()))
                 {
                     dupes++;
                     dupesList.add(candidate);
                 }
             }
             if (dupes > 0) {
-                // add read to dupes next_id
                 histo.increment(dupes + 1);
-                dupesList.add(read);
+                dupesList.add(key);
             }
         }
         final int sizeOfReads = this.reads.getReadsList().size();
@@ -317,6 +333,45 @@ public class KateAlgorithm implements Algorithms{
         // add uniq reads
         histo.increment(1, sizeOfReads - sizeOfUsed);
     }
+
+
+    @Deprecated
+    // return candidates Map sorted by keys
+    private Map<Read, List<Read>> sortKeys(Map<Read, List<Read>> candidates) {
+
+        final Set<Read> keySet = candidates.keySet();
+        final Read[] keys = keySet.stream().toArray(size -> new Read[size]);
+        Arrays.sort(keys);
+        Map<Read, List<Read>> result = new LinkedHashMap<>();
+        for (int i = 0; i < keys.length; i++) {
+            Read key = keys[i];
+            final List<Read> value = candidates.get(key);
+            result.put(key, value);
+        }
+        System.out.println("Map has sorted by keys");
+        return result;
+
+    }
+
+
+    @Deprecated
+    // sort each list, due to match results to ELC
+    private void sortCandidates(Map<Read, List<Read>> candidates) {
+
+//        this.checkSorted(candidates);
+        for (List<Read> readList : candidates.values()) {
+            readList.sort(new Comparator<Read>() {
+                @Override
+                public int compare(Read read1, Read read2) {
+                    return Integer.compare(read1.getId(), read2.getId());
+                }
+            });
+        }
+        for (List<Read> readList : candidates.values()) {
+            this.checkOrderOfList(readList, "  invoked from sortCandidates");
+        }
+    }
+
 
 
     public static void main(String[] args) {
@@ -336,7 +391,7 @@ public class KateAlgorithm implements Algorithms{
 
         reads.printInfo();
 
-        final Map<Read, List<Read>> candidates = kateAlgorithm.findCandidates();
+        final Map<Read, List<Read>> candidates = kateAlgorithm.findCandidatesByBands();
 
         for (Map.Entry<Read, List<Read>> entry : candidates.entrySet() ) {
             System.out.println(entry.getKey() + " candidates: " + entry.getValue());
