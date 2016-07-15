@@ -22,10 +22,10 @@ public class FindDuplicates {
 
     public static void main(String[] args) throws Exception {
 
-//        final String fileName = "/media/msa/small/elc_data/txt/CoverageBam_first_1_000_000_reads.txt";
-        final String fileName = "/media/msa/small/elc_data/txt/other_100_000_reads.txt";
+        final String fileName = "/media/msa/small/elc_data/txt/CoverageBam_first_1_000_000_reads.txt";
+//        final String fileName = "/media/msa/small/elc_data/txt/other_100_000_reads.txt";
         final double maxDiffRate = 0.03;
-        final int readsLimit = 10000;
+        final int readsLimit = 12_000;
 
         List<Read> readsList;
         Reads reads;

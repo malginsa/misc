@@ -78,7 +78,7 @@ public class Read implements Comparable{
 
     @Override
     public int hashCode() {
-        return nucleotides.hashCode();
+        return this.getId();
     }
 
     @Override
