@@ -88,7 +88,7 @@ public class Read implements Comparable{
     }
 
 //    @Override
-//    public int compare(Read read1, Read read2) {
+//    public int compare(StandaloneRead read1, StandaloneRead read2) {
 //        return Integer.compare(read1.getId(), read2.getId());
 //    }
 

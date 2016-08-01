@@ -85,10 +85,9 @@ public class KateAlgorithm implements Algorithms{
         }
         for (int i = keyIndex + 1; i < group.size(); i++) {
             final Read read = group.get(i);
-            if (read.equals(key)) {
-                continue;
+            if (!read.equals(key)) {
+                candidatesOfKey.add(read);
             }
-            candidatesOfKey.add(read);
         }
     }
 

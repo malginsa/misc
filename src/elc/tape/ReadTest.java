@@ -4,50 +4,29 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ReadTest {
 
     @Test
-    public void getHash() throws Exception {
-
-        Read read1 = new Read("AAAG");
-        read1.calculateHashes(3);
-
-        Read read2 = new Read("AAAG");
-        read2.calculateHashes(3);
-
-        assertEquals(read1.getHash(0), read2.getHash(0));
-
-        Read read3 = new Read("AAAGG");
-        read3.calculateHashes(3);
-        assertEquals(read1.getHash(0), read3.getHash(0));
-        assertNotEquals(read1.getHash(1), read3.getHash(1));
-
-        Read read4 = new Read("AAAGGG");
-        read4.calculateHashes(3);
-        assertEquals(read1.getHash(0), read4.getHash(0));
-        assertNotEquals(read1.getHash(1), read3.getHash(1));
-    }
-
-    @Test
     public void sortTest() {
-        Read read1 = new Read("C");
-        Read read2 = new Read("T");
-        Read read3 = new Read("A");
-        List<Read> list = new ArrayList<>();
+        StandaloneRead read1 = new StandaloneRead("C");
+        StandaloneRead read2 = new StandaloneRead("T");
+        StandaloneRead read3 = new StandaloneRead("A");
+        List<StandaloneRead> list = new ArrayList<>();
         list.add(read2);
         list.add(read1);
         list.add(read3);
         System.out.println(list);
 
-        Map<Integer, List<Read>> map = new HashMap<>();
+        Map<Integer, List<StandaloneRead>> map = new HashMap<>();
         map.put(0, list);
 
-        for (List<Read> readList : map.values()) {
-            readList.sort(new Comparator<Read>() {
+        for (List<StandaloneRead> readList : map.values()) {
+            readList.sort(new Comparator<StandaloneRead>() {
                 @Override
-                public int compare(Read read1, Read read2) {
+                public int compare(StandaloneRead read1, StandaloneRead read2) {
                     return Integer.compare(read1.getId(), read2.getId());
                 }
             });

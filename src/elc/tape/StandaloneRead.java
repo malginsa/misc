@@ -1,49 +1,31 @@
 package elc.tape;
 
-public class StandaloneRead implements Comparable{
-
-    private int id;
+public class StandaloneRead extends Read {
 
     private String nucleotides;
 
-    static int next_id = 0;
-
     public StandaloneRead(String nucleotides) {
+        super();
         this.nucleotides = nucleotides;
-        this.id = next_id++;
     }
 
-    public int getId() {
-        return id;
+    @Override
+    public char getNucl(int index) {
+        return this.nucleotides.charAt(index);
     }
 
-    public String getNucleotides() {
+    @Override
+    public String getAllNucles() {
         return nucleotides;
     }
 
-    public int length() {
+    public int getLength() {
         return nucleotides.length();
     }
 
     @Override
     public String toString() {
-        return this.nucleotides;
+        return super.toString() + " " + this.nucleotides.toString();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getId();
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        StandaloneRead other = (StandaloneRead) o;
-        return Integer.compare(this.getId(), other.getId());
-    }
 }

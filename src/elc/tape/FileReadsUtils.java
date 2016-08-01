@@ -33,14 +33,14 @@ public class FileReadsUtils {
     }
 
     // get limited list of reads only of max Length
-    public static List<Read> getLimited(String fileName, int limit) {
+    public static List<StandaloneRead> getLimited(String fileName, int limit) {
         final String[] allReads = getOnlyMaxLengthReads(fileName);
         // Crop the array of reads by MAX_READS
-        List<Read> cropped = new ArrayList<>();
+        List<StandaloneRead> cropped = new ArrayList<>();
         final int READS_COUNT = limit;
         Arrays.stream(allReads)
                 .limit(READS_COUNT)
-                .forEach(s -> cropped.add(new Read(s)));
+                .forEach(s -> cropped.add(new StandaloneRead(s)));
         return cropped;
     }
 
