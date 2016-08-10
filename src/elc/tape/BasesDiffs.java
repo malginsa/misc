@@ -1,37 +1,36 @@
 package elc.tape;
 
-// Store differences between nucleotides in tapedRead and tape
+// Store differences between bases in tapedRead and tape
 
 import java.util.*;
 
-public class NuclesDiffs implements Iterator{
+public class BasesDiffs implements Iterator{
 
-    // key - position on tape, value -- nucleotide
+    // key - position on tape, value -- base
     private Map<Integer, Character> diffs;
 
     // empiric ratio to initialize primiry size of arrayList's
     private static int RATIO = 2;
 
-    public NuclesDiffs() {
+    public BasesDiffs() {
         diffs = new HashMap<>();
     }
 
-    public void add(int index, Character nucl) {
-        diffs.put(index, nucl);
+    public void add(int index, Character base) {
+        diffs.put(index, base);
     }
 
-    public Optional<Character> getNucl(int index) {
+    public Optional<Character> getBase(int index) {
         return Optional.ofNullable(diffs.get(index));
     }
 
     @Override
     public String toString() {
-        return "diffs{" + diffs + '}';
+        return "diffs{ " + diffs + " }";
     }
 
     @Override
     public boolean hasNext() {
-
         return false;
     }
 

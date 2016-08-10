@@ -6,34 +6,40 @@ public class Tape {
 
     private final static int MAX_SHIFT = 5;
 
-    public final static int ALLOWED_MISMATCHES = 1; // count of allowed mismatched nucleotides when read taped
+    public final static int ALLOWED_MISMATCHES = 1; // count of allowed mismatched bases when read taped
 
     private static int[] SHIFTS = {0, 1, 2, -1, -2, 3, -3, 4, -4, 5, -5};
 
-    // prefix of tape. It's crutch, used when second read shifted left more than one nucles
+    // prefix of tape. It's crutch, used when second read shifted left more than one bases
     private static String prefix = "....."; // must be '.' * MAX_SHIFT
 
-    private StringBuilder nucleotides = null;
+//    private StringBuilder bases = null;
+
+    private byte[] bases;
+
+    private int length;
 
     private int count = 0; // count of taped reads
 
     public Tape(StandaloneRead firstRead) {
-        nucleotides = new StringBuilder();
-        nucleotides.append(prefix);
-        nucleotides.append(firstRead.getAllNucles());
+//        bases = new StringBuilder();
+        // TODO: try to optimize
+        bases = new byte[Integer.MAX_VALUE];
+        bases.append(prefix);
+        bases.append(firstRead.getAllBases());
         this.count++;
     }
 
-    // count of mismatched nucles, when read is compared with tale of tape
-    // shift -- count of shifting nucles, > 0 -- shift to the right, < 0 -- shift to the left
+    // count of mismatched bases, when read is compared with tale of tape
+    // shift -- count of shifting bases, > 0 -- shift to the right, < 0 -- shift to the left
     private int mismatchesCount(StandaloneRead read, int shift) {
         int count = 0;
         final int readLength = read.getLength();
         final int endIndex = shift > 0 ? readLength - shift : readLength;
-        final int offset = this.nucleotides.length() - readLength + shift;
+        final int offset = this.length - readLength + shift;
         // TODO: to optimize
         for (int i = 0; i < endIndex; i++) {
-            if (read.getNucl(i) != this.nucleotides.charAt(offset + i)) {
+            if (read.getBase(i) != this.bases[offset + i]) {
                 count++;
             }
         }
@@ -42,16 +48,16 @@ public class Tape {
 
     private void extendTape(StandaloneRead read, int shift) {
         for (int i = 0; i < shift; i++) {
-            nucleotides.append(read.getNucl(read.getLength() - shift + i));
+            bases.append(read.getBase(read.getLength() - shift + i));
         }
         this.count++;
     }
 
-    private NuclesDiffs makeUpDiffs(StandaloneRead read, int startIndex) {
-        NuclesDiffs diffs = new NuclesDiffs();
+    private BasesDiffs makeUpDiffs(StandaloneRead read, int startIndex) {
+        BasesDiffs diffs = new BasesDiffs();
         for (int i = 0; i < read.getLength(); i++) {
-            if (read.getNucl(i) != this.nucleotides.charAt(i + startIndex)) {
-                diffs.add(i, read.getNucl(i));
+            if (read.getBase(i) != this.bases[i + startIndex]) {
+                diffs.add(i, read.getBase(i));
             }
         }
         return diffs;
@@ -66,7 +72,7 @@ public class Tape {
                     this.extendTape(read, shift);
                 }
                 final int readLength = read.getLength();
-                final int startIndex = this.nucleotides.length() - readLength;
+                final int startIndex = this.length - readLength;
                 final TapedRead tapedRead = new TapedRead(this, startIndex, readLength,
                         this.makeUpDiffs(read, startIndex));
                 return Optional.of(tapedRead);
@@ -75,18 +81,20 @@ public class Tape {
         return Optional.empty();
     }
 
-    public char getNucl(int index) {
-        return this.nucleotides.charAt(index);
+    public char getBase(int index) {
+        return (char) this.bases[index];
     }
 
-    public CharSequence getNucles(int startIndex, int lenght) {
-        return this.nucleotides.subSequence(startIndex, startIndex + lenght);
+    public CharSequence getBasesRange(int startIndex, int lenght) {
+        // TODO
+//        return this.bases.subSequence(startIndex, startIndex + lenght);
+        return null;
     }
 
     @Override
     public String toString() {
         return "Tape{" +
-                "nucleotides=" + nucleotides +
+                "bases=" + bases +
                 ", count=" + count +
                 '}';
     }

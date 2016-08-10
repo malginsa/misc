@@ -14,9 +14,9 @@ public abstract class Read implements Comparable {
         return id;
     }
 
-    public abstract char getNucl(int index);
+    public abstract char getBase(int index);
 
-    public abstract String getAllNucles();
+    public abstract String getAllBases();
 
     public abstract int getLength();
 

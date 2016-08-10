@@ -2,30 +2,30 @@ package elc.tape;
 
 public class StandaloneRead extends Read {
 
-    private String nucleotides;
+    private String bases;
 
-    public StandaloneRead(String nucleotides) {
+    public StandaloneRead(String bases) {
         super();
-        this.nucleotides = nucleotides;
+        this.bases = bases;
     }
 
     @Override
-    public char getNucl(int index) {
-        return this.nucleotides.charAt(index);
+    public char getBase(int index) {
+        return this.bases.charAt(index);
     }
 
     @Override
-    public String getAllNucles() {
-        return nucleotides;
+    public String getAllBases() {
+        return bases;
     }
 
     public int getLength() {
-        return nucleotides.length();
+        return bases.length();
     }
 
     @Override
     public String toString() {
-        return super.toString() + " " + this.nucleotides.toString();
+        return super.toString() + " " + this.bases.toString();
     }
 
 }

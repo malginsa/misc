@@ -1,17 +1,16 @@
 package elc.tape;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public class TapedRead extends Read {
 
     private Tape tape;
-    private int startIndex;  // index of first nucleotide on Tape
+    private int startIndex;  // index of first base on Tape
     private int length;
-    private NuclesDiffs diffs;
+    private BasesDiffs diffs;
 
-    public TapedRead(Tape tape, int startIndex, int length,  NuclesDiffs diffs) {
+    public TapedRead(Tape tape, int startIndex, int length,  BasesDiffs diffs) {
         super();
         this.tape = tape;
         this.startIndex = startIndex;
@@ -20,22 +19,22 @@ public class TapedRead extends Read {
     }
 
     @Override
-    public char getNucl(int index) {
-        final Optional<Character> optional = diffs.getNucl(index);
+    public char getBase(int index) {
+        final Optional<Character> optional = diffs.getBase(index);
         if (optional.isPresent()) {
             return optional.get();
         } else {
-            return this.tape.getNucl(index);
+            return this.tape.getBase(index);
         }
     }
 
     @Override
-    public String getAllNucles() {
-        final CharSequence charSequence = this.tape.getNucles(startIndex, length);
-        // TODO: to optimize
-        final StringBuilder stringBuilder = new StringBuilder(charSequence);
+    public String getAllBases() {
+        final CharSequence charSequence = this.tape.getBasesRange(startIndex, length);
 
-        return null;
+        Array.
+        charSequence.
+        return charSequence.toString();
     }
 
     @Override
@@ -46,9 +45,9 @@ public class TapedRead extends Read {
     @Override
     public String toString() {
         return super.toString() + " " +
-                "TapedRead{" +
+                "taped {" +
 //                "tape=" + tape +
-                "nucles=" + this.getAllNucles() +
+                "bases=" + this.getAllBases() +
                 ", startIndex=" + startIndex +
                 ", diffs=" + diffs +
                 '}';
