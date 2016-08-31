@@ -1,17 +1,8 @@
 package lesson160405;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import library.Book;
-import library.Book.Topic;
 
 public class StreamsExamples {
 

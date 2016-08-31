@@ -25,8 +25,8 @@ public class Tape {
 //        bases = new StringBuilder();
         // TODO: try to optimize
         bases = new byte[Integer.MAX_VALUE];
-        bases.append(prefix);
-        bases.append(firstRead.getAllBases());
+//        bases.append(prefix);
+//        bases.append(firstRead.getAllBases());
         this.count++;
     }
 
@@ -48,7 +48,7 @@ public class Tape {
 
     private void extendTape(StandaloneRead read, int shift) {
         for (int i = 0; i < shift; i++) {
-            bases.append(read.getBase(read.getLength() - shift + i));
+//            bases.append(read.getBase(read.getLength() - shift + i));
         }
         this.count++;
     }

@@ -31,8 +31,8 @@ public class TapedRead extends Read {
     public String getAllBases() {
         final CharSequence charSequence = this.tape.getBasesRange(startIndex, length);
 
-        Array.
-        charSequence.
+//        Array.
+//        charSequence.
         return charSequence.toString();
     }
 

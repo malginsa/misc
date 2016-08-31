@@ -94,20 +94,20 @@ public class BestShopFinder {
 //		List<String> priceList = findPricesInUSD("silence");
 //		priceList.stream().forEach(s -> System.out.println(s));
 
-		CompletableFuture[] futures = findPricesStream("silence")
-			.map(f -> f.thenAccept(s -> System.out.println(
-				s + " (done in " + ((System.nanoTime()-start) / 1_000_000) + " msecs)")))
-			.toArray(size -> new CompletableFuture[size]);
-		CompletableFuture.allOf(futures).join(); // all the shops
-		// CompletableFuture.anyOf(futures).join(); // only the fastest shop
-		
+		List<CompletableFuture<Void>> futures = findPricesStream("silence")
+			.map(future -> future.thenAccept(System.out::println))
+			.collect(Collectors.toList());
+		futures.stream()
+			.map(CompletableFuture::join)
+			.collect(Collectors.toList());
+
 		// the same result
-//		List<CompletableFuture<Void>> futures = findPricesStream("silence")
-//			.map(future -> future.thenAccept(System.out::println))
-//			.collect(Collectors.toList());
-//		futures.stream()
-//			.map(CompletableFuture::join)
-//			.collect(Collectors.toList());
+//		CompletableFuture[] futures = findPricesStream("silence")
+//			.map(f -> f.thenAccept(s -> System.out.println(
+//				s + " (done in " + ((System.nanoTime()-start) / 1_000_000) + " msecs)")))
+//			.toArray(size -> new CompletableFuture[size]);
+//		CompletableFuture.allOf(futures).join(); // all the shops
+//		// CompletableFuture.anyOf(futures).join(); // only the fastest shop
 
 		long duration = (System.nanoTime() - start) / 1_000_000;
 		System.out.println("Done in "+ duration +" msecs");
