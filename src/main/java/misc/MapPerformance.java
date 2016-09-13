@@ -5,12 +5,12 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
-import static util.Utils.printSystemResourcesInfo;
+import static util.Utils.printMemoryInfo;
 
 public class MapPerformance {
 
     public static void main(String[] args) {
-        printSystemResourcesInfo();
+        printMemoryInfo();
         final int stringCount = 60_000_000;
         final StringGenerator stringGenerator = new StringGenerator(13, stringCount);
 
@@ -30,6 +30,6 @@ public class MapPerformance {
         final double elapsed = Duration.between(start, finish).toMillis() / 1000.;
         System.out.println("Elapsed time = " + elapsed + " sec");
 
-        printSystemResourcesInfo();
+        printMemoryInfo();
     }
 }

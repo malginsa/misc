@@ -66,7 +66,7 @@ public class Utils {
 		return Duration.between(timeStampStart, timeStampFinish).toMillis()/1000.;
 	}
 
-    public static void printSystemResourcesInfo() {
+    public static void printMemoryInfo() {
 
         /* This will return Long.MAX_VALUE if there is no preset limit */
         long max = Runtime.getRuntime().maxMemory();
@@ -81,10 +81,24 @@ public class Utils {
         final long used = total - free;
 
         System.out.print("Memory in MBytes: \tmaximum = " + ( max / 1_000_000) + " \t");
-        System.out.print("total = " + total / 1_000_000 + " \t");
-        System.out.print("free = " + free / 1_000_000 + " \t");
-        System.out.println("used = " + used / 1_000_000);
+        System.out.print("total = " + total / 1048576 + " \t");
+        System.out.print("free = " + free / 1048576 + " \t");
+        System.out.println("used = " + used / 1048576);
     }
+
+	/**
+        return free heap memory in MBytes
+     */
+    public static long getFreeMemory() {
+		return Runtime.getRuntime().freeMemory() / 1048576;
+	}
+
+    /**
+    	return used heap memory in MBytes
+     */
+    public static long getUsedMemorySize() {
+		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576;
+	}
 
     public static void main(String[] args) {
 	}

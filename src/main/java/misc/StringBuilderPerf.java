@@ -2,9 +2,7 @@ package misc;
 
 import util.Utils;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -28,28 +26,31 @@ public class StringBuilderPerf {
 
             counter++;
             if((counter % 1_000_000) == 0) {
-                System.out.print(counter/1_000_000 + " ");
+                System.out.print("millions of strings = " + counter/1_000_000);
+                System.out.print("  free = " + Utils.getFreeMemory());
+                System.out.println("  used = " + Utils.getUsedMemorySize());
             }
             if (next.equals(previous)) {
-                System.out.println("!");
+                System.out.println("try to use another random generator");
             }
             previous = next;
         }
 
         System.out.println();
-        Utils.printSystemResourcesInfo();
+        Utils.printMemoryInfo();
 
         return builder.toString();
     }
 
     public static void main(String[] args) {
-        Utils.printSystemResourcesInfo();
+        Utils.printMemoryInfo();
         final double elapsed = Utils.timeMeasurement(() -> {
 
             final String hugeString = createHugeString();
 
             final Charset charset = Charset.forName("US-ASCII");
             final Path path = Paths.get("hugeString.txt");
+            path.toFile().deleteOnExit();
             try (final BufferedWriter writer = Files.newBufferedWriter(path, charset)) {
                 writer.write(hugeString);
             } catch (IOException e) {
