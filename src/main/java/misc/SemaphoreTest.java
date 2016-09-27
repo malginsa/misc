@@ -3,16 +3,14 @@ package misc;
 // 
 // Copying elements from one array to other in different thread
 
+import util.Utils;
+
 import java.util.Arrays;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 import java.util.stream.IntStream;
-
-import util.Utils;
 
 public class SemaphoreTest {
 
