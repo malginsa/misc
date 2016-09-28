@@ -151,7 +151,7 @@ class VertexDistance {
 
     public static void main(String[] args) {
         UndiGraph undiGraph = new UndiGraph(args[0]);
-//        UndiGraph undiGraph = new UndiGraph();
+//        Graph undiGraph = new Graph();
         Counter counter = new Counter(undiGraph);
         System.out.println(counter.getDistancesAsString());
     }

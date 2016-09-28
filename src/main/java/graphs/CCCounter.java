@@ -148,7 +148,7 @@ class CCCounter {
 //                    "graph's description must be the first argument");
 //        }
 //
-//        UndiGraph undiGraph = new UndiGraph(args[0]);
+//        Graph undiGraph = new Graph(args[0]);
         UndiGraph undiGraph = new UndiGraph();
         Counter connCompCounter = new Counter(undiGraph);
         System.out.println(connCompCounter.getCount());
