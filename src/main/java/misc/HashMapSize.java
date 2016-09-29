@@ -20,14 +20,6 @@ public class HashMapSize {
 
         final Integer value = arr[1].get(2);
         System.out.println(value);
-//        arr[1].put(2,2);
-//        System.out.println(arr[1].get(2));
-//        arr[1].clear();
-//        System.out.println(arr[1].size());
-//        System.out.println(arr[1].isEmpty());
-//        arr[1].put(3,1);
-//        System.out.println(arr[1].size());
-//        System.out.println(arr[1].isEmpty());
 
         long free2 = Runtime.getRuntime().freeMemory();
         long used2 = Runtime.getRuntime().totalMemory() - free2;
@@ -35,5 +27,15 @@ public class HashMapSize {
         System.out.println("free memory consumption: " + (free1 - free2));
         System.out.println("used memory difference: " + (used2 - used1));
 
+
+        Map<Integer, Integer>[] adj =
+                (HashMap<Integer, Integer>[])new HashMap[10];
+
+        adj[0] = new HashMap<>();
+        adj[0].put(1,1);
+        adj[0].put(2,2);
+        System.out.println(adj[0]);
+        adj[0].remove(1);
+        System.out.println(adj[0]);
     }
 }

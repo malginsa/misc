@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * Calculate euler's cycle
+ * Calculate euler's totalCycle
  */
 
 class EulerCycle {
@@ -17,10 +17,12 @@ class EulerCycle {
     // allows to delete edges
     private static class Graph {
 
+        private static final int FIRST_INDEX = 1; // vertex numbering started with
+
         private int V; // vertex count
         private int E; // edges count
         private Map<Integer, Integer>[] adjacencies; // adjacency list of adjacencies
-        // adjacencies[0] ist not used
+        // adjacencies[0] is not used
 
         // graph creation using data from input stream
         public Graph() {
@@ -61,9 +63,9 @@ class EulerCycle {
             String[] pair = line.split(" ");
             V = Integer.parseInt(pair[0]);
             E = Integer.parseInt(pair[1]);
-            // vertex numbers starts with '1'
-            adjacencies = (HashMap<Integer, Integer>[])new HashMap[V+1];
-            for (int i = 1; i < V+1; i++) {
+            // vertex numbers starts with FIRST_INDEX
+            adjacencies = (HashMap<Integer, Integer>[])new HashMap[V+FIRST_INDEX];
+            for (int i = FIRST_INDEX; i < V+FIRST_INDEX; i++) {
                 adjacencies[i] = new HashMap<>();
             }
         }
@@ -104,13 +106,18 @@ class EulerCycle {
         }
 
         private void deleteAdjacency(int from, int to) {
+            // TODO optimize: edgeCount is always must be the same for "trom" and "to"
             Integer edgesCount = adjacencies[from].get(to);
             if (edgesCount < 1) {
                 throw new RuntimeException("can't delete nonexistent edge "
                         + from + " -> " + to);
             }
             edgesCount--;
-            adjacencies[from].put(to, edgesCount);
+            if (edgesCount > 0) {
+                adjacencies[from].put(to, edgesCount);
+            } else {
+                adjacencies[from].remove(to);
+            }
         }
 
         public Optional<Integer> pullAnyAdjacency(int vertex) {
@@ -130,7 +137,7 @@ class EulerCycle {
             StringBuilder res = new StringBuilder();
             res.append("|V| = ").append(V).append("  |E| = ").append(E)
                     .append('\n').append("edges:\n");
-            for (int v = 1; v < adjacencies.length; v++) {
+            for (int v = FIRST_INDEX; v < adjacencies.length; v++) {
                 res.append(v).append(":");
                 for (Map.Entry<Integer, Integer> adjacency : adjacencies[v].entrySet()) {
                     res.append(' ').append(adjacency.getKey()).append(':')
@@ -140,30 +147,35 @@ class EulerCycle {
             }
             return res.toString();
         }
+
+        public boolean hasEdges() {
+            return E > 0;
+        }
     }
 
     private static class Cycle {
 
         private final String NO_CYCLE = "NONE";
 
-        private final int STARTING_VERTEX = 1;
+        private final int START_VERTEX = Graph.FIRST_INDEX;
 
-        private List<Integer> cycle = new LinkedList<>();
+        private List<Integer> totalCycle = new LinkedList<>();
 
-        private Set<Integer> candidates = new HashSet<>(); // vertex, which can extend cycle
+        // vertices, which can extend totalCycle
+        private TreeSet<Integer> candidates = new TreeSet<>();
 
         private final Graph graph;
 
         public Cycle(Graph graph) {
             this.graph = graph;
-            candidates = new HashSet<>();
+            candidates = new TreeSet<>();
         }
 
-        public String getCycle() {
+        public String getEulerCycle() {
 
-            // check cycle's existance
+            // check Euler's cycle existance
             int adjacenciesCount;
-            for (int vertex = 1; vertex < graph.getV()+1; vertex++) {
+            for (int vertex = Graph.FIRST_INDEX; vertex < graph.getV() + Graph.FIRST_INDEX; vertex++) {
                 adjacenciesCount = 0;
                 for (Integer degree : graph.getAdjacencies(vertex).values()) {
                     adjacenciesCount += degree;
@@ -173,45 +185,57 @@ class EulerCycle {
                 }
             }
 
-            findCycle(STARTING_VERTEX);
+            List<Integer> firstCycle = findCycle(START_VERTEX);
+            totalCycle.addAll(firstCycle);
+
             while (!candidates.isEmpty()) {
-                candidates.;
+                Integer candidate = candidates.pollFirst();
+                List<Integer> addition = findCycle(candidate);
+                if (addition.size() > 0) {
+                    insertAddition(addition);
+                }
+                if (graph.getAdjacencies(candidate).size() != 0) {
+                    candidates.add(candidate);
+                }
             }
 
+            if (graph.hasEdges()) {
+                return NO_CYCLE;
+            }
 
-//            if (graph.IsRemainsEdges()) {
-//                return NO_CYCLE;
-//            }
-            return cycle.toString();
+            return totalCycle.toString();
         }
 
-        private void findCycle(int start) {
-            int vertex;
+        private void insertAddition(List<Integer> addition) {
+            Integer first = addition.get(0);
+            int indexFirst = totalCycle.indexOf(first);
+            totalCycle.addAll(indexFirst, addition);
+        }
+
+        private List<Integer> findCycle(int start) {
+            List<Integer> cycle = new LinkedList<>();
+            int vertex = start;
             Optional<Integer> vertexOpt;
-            vertexOpt = graph.pullAnyAdjacency(start);
+            vertexOpt = graph.pullAnyAdjacency(vertex);
             while (vertexOpt.isPresent()) {
-                vertex = vertexOpt.get();
                 cycle.add(vertex);
+                vertex = vertexOpt.get();
                 candidates.add(vertex);
                 vertexOpt = graph.pullAnyAdjacency(vertex);
             }
+            return cycle;
         }
     }
 
     public static void main(String[] args) {
-
 //        if (args.length < 1) {
 //            throw new IllegalArgumentException("file name with " +
 //                    "graph's description must be the first argument");
 //        }
-//
         Graph graph = new Graph(args[0]);
 //        Graph graph = new Graph();
-        System.out.print(graph);
         Cycle cycle = new Cycle(graph);
-        System.out.println(cycle.getCycle());
-
-//        System.out.println(graph.pullAnyAdjacency(2));
-        System.out.print(graph);
+        System.out.println(cycle.getEulerCycle().replaceAll("[,\\[\\]]", ""));
     }
+
 }

@@ -22,7 +22,7 @@ public class ParallelStreamsHarness {
         	+ measurePerf(ForkJoinSumCalculator::forkJoinSum, 10_000_000L) + " msecs" );
 //        System.out.println("SideEffect sum done in: \n" 
 //        	+ measurePerf(ParallelStreams::sideEffectSum, 10_000_000L) + " msecs" );
-        System.out.println("SideEffect prallel sum done in: \n" 
+        System.out.println("SideEffect prallel sum done in: \n"
         	+ measurePerf(ParallelStreams::sideEffectParallelSum, 10_000_000L) + " msecs" );
     }
 
