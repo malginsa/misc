@@ -6,10 +6,16 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeSet;
+
 
 /**
- * Calculate euler's totalCycle
+ * Calculate euler's cycle
  */
 
 class EulerCycle {
@@ -17,11 +23,11 @@ class EulerCycle {
     // allows to delete edges
     private static class Graph {
 
-        private static final int FIRST_INDEX = 1; // vertex numbering started with
+        private static final int FIRST_INDEX = 1; // vertex numbering start with
 
         private int V; // vertex count
         private int E; // edges count
-        private Map<Integer, Integer>[] adjacencies; // adjacency list of adjacencies
+        private Map<Integer, Integer>[] adjacencies; // adjacency list of verticies
         // adjacencies[0] is not used
 
         // graph creation using data from input stream
@@ -109,7 +115,7 @@ class EulerCycle {
             // TODO optimize: edgeCount is always must be the same for "trom" and "to"
             Integer edgesCount = adjacencies[from].get(to);
             if (edgesCount < 1) {
-                throw new RuntimeException("can't delete nonexistent edge "
+                throw new RuntimeException("Can't delete nonexistent edge "
                         + from + " -> " + to);
             }
             edgesCount--;
@@ -164,7 +170,7 @@ class EulerCycle {
         // vertices, which can extend totalCycle
         private TreeSet<Integer> candidates = new TreeSet<>();
 
-        private final Graph graph;
+        private Graph graph;
 
         public Cycle(Graph graph) {
             this.graph = graph;
