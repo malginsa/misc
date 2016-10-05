@@ -6,3 +6,4 @@
 .metadata/.plugins/*
 /bin/
 workspace.xml
+.idea/*
