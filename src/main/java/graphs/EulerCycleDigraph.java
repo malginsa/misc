@@ -230,7 +230,7 @@ class EulerCycleDigraph {
 //            throw new IllegalArgumentException("file name with " +
 //                    "diGraph's description must be the first argument");
 //        }
-        DiGraph diGraph = new Graph(args[0]);
+        DiGraph diGraph = new DiGraph(args[0]);
 //        DiGraph diGraph = new DiGraph();
         Cycle cycle = new Cycle(diGraph);
         System.out.println(cycle.getEulerCycle().replaceAll("[,\\[\\]]", ""));
