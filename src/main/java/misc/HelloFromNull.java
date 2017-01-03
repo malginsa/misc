@@ -1,6 +1,6 @@
 package misc;
 
-public class StaticMethod {
+class StaticMethod {
 
     static void hello() {
         System.out.println("hello from static method");

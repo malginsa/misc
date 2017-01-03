@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Connected component count in undirected graph
+ * Connected component counter in undirected graph
  * vertex numbers starts with '1'
  */
 
@@ -23,7 +23,7 @@ class CCCounter {
         private List<Integer>[] neighbours; // adjacency list of neighbours
         // neighbours[0] ist not used
 
-        // graph creation using data from input stream
+        // read data from input stream
         public UndiGraph() {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(
                     System.in));) {
@@ -36,7 +36,6 @@ class CCCounter {
             }
         }
 
-        // graph creation using data from input file
         public UndiGraph(String fileName) {
             final Path file = Paths.get(fileName);
             try (BufferedReader reader = Files.newBufferedReader(file)) {
@@ -110,18 +109,18 @@ class CCCounter {
         }
     }
 
-    private static class Counter {
+    private static class ConnCompCounter {
 
-        private int count;
+        private int counter;
         private UndiGraph undiGraph;
         private boolean visited[];
 
-        public Counter(UndiGraph undiGraph) {
+        public ConnCompCounter(UndiGraph undiGraph) {
             this.undiGraph = undiGraph;
             visited = new boolean[undiGraph.getV() + 1];
             for (int v = 1; v < undiGraph.getV() + 1; v++) {
                 if (!visited[v]) {
-                    count++;
+                    counter++;
                     dfs(v);
                 }
             }
@@ -136,8 +135,8 @@ class CCCounter {
                     .forEach(this::dfs);
         }
 
-        public int getCount() {
-            return count;
+        public int getCounter() {
+            return counter;
         };
     }
 
@@ -148,10 +147,10 @@ class CCCounter {
 //                    "graph's description must be the first argument");
 //        }
 //
-//        Graph undiGraph = new Graph(args[0]);
+//        UndiGraph undiGraph = new UndiGraph(args[0]);
         UndiGraph undiGraph = new UndiGraph();
-        Counter connCompCounter = new Counter(undiGraph);
-        System.out.println(connCompCounter.getCount());
+        ConnCompCounter connCompCounter = new ConnCompCounter(undiGraph);
+        System.out.println(connCompCounter.getCounter());
 
     }
 }
