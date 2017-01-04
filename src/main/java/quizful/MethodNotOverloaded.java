@@ -1,7 +1,7 @@
 package quizful;
 
 class Parent {
-    private void print() {
+    private void print() { // it can't be overloaded cause it is private
         System.out.println("in Parent");
     }
     void print(Parent p) {
@@ -14,7 +14,6 @@ class Child extends Parent {
         System.out.println("in Child");
     }
 }
-
 
 public class MethodNotOverloaded {
     public static void main(String[] args) {
