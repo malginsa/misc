@@ -1,6 +1,6 @@
 package quizful;
 
-public class NumbersCompare {
+public class MiscCompisons {
     public static void main(String[] args) {
 
         Integer i1 = 77;
@@ -26,6 +26,12 @@ public class NumbersCompare {
         System.out.println(s1 == "first"); // false
         System.out.println(s1 == new String("first")); //false
 
+        System.out.println("\tStringBuilder:");
+        StringBuilder sb1 = new StringBuilder("test");
+        StringBuilder sb2 = new StringBuilder("test");
+        System.out.println(sb1.equals(sb2)); // false, cause equals is invoked from Object
+        String s2 = new String("STRINg");
+        System.out.println(s2.charAt(s2.length()) == 't');
 
     }
 }
