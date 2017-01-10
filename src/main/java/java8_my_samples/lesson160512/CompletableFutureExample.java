@@ -24,7 +24,7 @@ public class CompletableFutureExample {
 	
 	public static void main(String[] args) {
 
-//		CompletableFuture<String> completableFuture = 
+//		CompletableFuture<MyString> completableFuture =
 //			CompletableFuture.supplyAsync(task::call);
 //		completableFuture.thenAccept(System.out::println);
 
