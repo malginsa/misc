@@ -1,6 +1,6 @@
 package quizful;
 
-public class MiscCompisons {
+public class MiscComparisons {
     public static void main(String[] args) {
 
         Integer i1 = 77;

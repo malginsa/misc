@@ -1,12 +1,12 @@
 package quizful;
 
-abstract class A{
+abstract class A7{
     abstract void m1();
 }
 
-abstract class B extends A{}
+abstract class B7 extends A7{}
 
-class C extends B {
+class C7 extends B7 {
 
     @Override
     void m1() {
