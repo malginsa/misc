@@ -38,6 +38,14 @@ public class Misc {
 
         System.out.println(i.toString() == i.toString()); // false
         System.out.println(i.toString().intern() == i.toString().intern()); // true
+
+        System.out.println( 0.3 == 0.1d + 0.1d + 0.1d ); // false
+
+        Integer i2 = 5000;
+        System.out.println(i2.hashCode());
+
+        int i3 = 012;
+        System.out.println(i3);
     }
 
     private static void inc(Integer i) {
