@@ -44,8 +44,7 @@ public class Misc {
         Integer i2 = 5000;
         System.out.println(i2.hashCode());
 
-        int i3 = 012;
-        System.out.println(i3);
+        System.out.println("" + 012 + " " + 0x12); // 10 18
     }
 
     private static void inc(Integer i) {

@@ -10,8 +10,14 @@ public class Misc {
 
         Class<Integer> integerClass2 = Integer.TYPE;
 
+        Class<Integer> integerClass3 = Integer.class;
+
         System.out.println(integerClass.equals(integerClass2));
 
         System.out.println(stringClass.equals(integerClass2));
+
+        System.out.println(integerClass);
+        System.out.println(integerClass2);
+        System.out.println(integerClass3);
     }
 }
