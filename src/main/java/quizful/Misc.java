@@ -45,6 +45,19 @@ public class Misc {
         System.out.println(i2.hashCode());
 
         System.out.println("" + 012 + " " + 0x12); // 10 18
+
+        int []a1 = {5,5};
+        int b1 = 1;
+        a1[b1] = b1 = 0;
+        System.out.println(Arrays.toString(a1));
+
+        PrintBinaryRepresentation(7);
+        PrintBinaryRepresentation(~7);
+
+    }
+
+    private static void PrintBinaryRepresentation(Integer i) {
+        System.out.println(i + " in binary representation: " + Integer.toBinaryString(i));
     }
 
     private static void inc(Integer i) {

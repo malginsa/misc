@@ -1,6 +1,6 @@
 package quizful;
 
-public class StaticInitialization {
+public class StaticInitialization1 {
 
     static class A extends B {
         static Integer q = 2;
