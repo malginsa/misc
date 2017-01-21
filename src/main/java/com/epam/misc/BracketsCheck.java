@@ -3,7 +3,6 @@ package com.epam.misc;
 public class BracketsCheck {
     boolean doCheck(String s) {
         char[] chars = s.toCharArray();
-// ???
         int nestings = 0;
         for (char ch : chars ) {
             switch (ch) {
