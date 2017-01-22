@@ -1,4 +1,4 @@
-package patterns.ducks;
+package patterns.strategy.ducks;
 
 public abstract class Duck {
 
@@ -18,7 +18,7 @@ public abstract class Duck {
     public abstract void display();
 
     protected void swim() {
-        System.out.print(" .. any duck can swim");
+        System.out.println(" .. any duck can swim");
     }
 
     protected void performFly() {
