@@ -6,7 +6,7 @@ abstract class AbstractInterface {
 
 //abstract class X implements AbstractInterface {}
 
-class Z extends AbstractInterface {
+class Z1 extends AbstractInterface {
     protected int doSmth(String s) {
         return 0;
     }
