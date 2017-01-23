@@ -1,4 +1,4 @@
-package patterns.observer;
+package patterns.observer.meteo_v1;
 
 public class ForecastDisplay implements Observer, DisplayElement {
 
