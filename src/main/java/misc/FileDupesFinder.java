@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import static java.nio.file.FileVisitResult.*;
@@ -16,10 +18,14 @@ public class FileDupesFinder {
 
     private static class FileSystemCrawler extends SimpleFileVisitor<Path> {
 
-        private Map<Long, Path> uniques;
+        private Map<Long, List<Path>> uniques;
 
         public FileSystemCrawler() {
             uniques = new HashMap<>();
+        }
+
+        public Map<Long, List<Path>> getUniques() {
+            return uniques;
         }
 
         // Print information about each type of file.
@@ -29,13 +35,17 @@ public class FileDupesFinder {
                 return CONTINUE;
             }
             long size = attr.size();
-            System.out.println("CRAWLING FILE: " + file + " (" + size + " bytes)");
+//            System.out.println("CRAWLING FILE: " + file + " (" + size + " bytes)");
             if (uniques.containsKey(size)) {
-                System.out.println("DUPE FOUND FOR SIZE = " + size);
-                System.out.println("NAME 1: " + uniques.get(size));
-                System.out.println("NAME 2: " + file);
+                // add to an existing list
+                uniques.get(size).add(file);
+//                System.out.println("DUPE FOUND FOR SIZE = " + size);
+//                System.out.println("NAME ADDED: " + file);
             } else {
-                uniques.put(size, file);
+                // new list
+                LinkedList<Path> newList = new LinkedList<>();
+                newList.add(file);
+                uniques.put(size, newList);
             }
             return CONTINUE;
         }
@@ -56,8 +66,35 @@ public class FileDupesFinder {
     }
 
     public static void main(String[] args) throws IOException {
+
+        if (args.length < 1) {
+            System.out.println("usage: misc.FileDupesFinder \"root-dir\"");
+            System.exit(1);
+        }
+
         FileDupesFinder fileDupesFinder = new FileDupesFinder();
-        Files.walkFileTree(Paths.get("/home/msa/Downloads"), new FileSystemCrawler());
+        FileSystemCrawler crawler = new FileSystemCrawler();
+        Files.walkFileTree(Paths.get(args[0]), crawler);
+        Map<Long, List<Path>> uniques = crawler.getUniques();
+
+        long totalSize = 0;
+        long totalDupes = 0;
+        System.out.println("\n --- DUPES ---");
+        for (Map.Entry<Long, List<Path>> entry : uniques.entrySet()) {
+            List<Path> dupesList = entry.getValue();
+            if (dupesList.size() < 2) {
+                continue;
+            }
+            Long size = entry.getKey();
+            totalDupes += (dupesList.size()-1);
+            totalSize += size * (dupesList.size()-1);
+            System.out.println(size);
+            dupesList.stream().forEach(System.out::println);
+        }
+        System.out.println(" --- TOTAL ---");
+        System.out.println("FILE DUPES = " + totalDupes);
+        System.out.println("SIZE = " + totalSize/1024/1024/1024 + " GB");
+
     }
 
 }
