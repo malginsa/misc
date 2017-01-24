@@ -1,4 +1,4 @@
-package patterns.decorator;
+package patterns.decorator.rpg;
 
 public class Troll implements Hostile{
 

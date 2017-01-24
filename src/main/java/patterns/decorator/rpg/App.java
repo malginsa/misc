@@ -1,4 +1,4 @@
-package patterns.decorator;
+package patterns.decorator.rpg;
 
 public class App {
     public static void main(String[] args) {
