@@ -1,4 +1,4 @@
-package patterns.factory;
+package patterns.factory.v3;
 
 public abstract class PizzaStore {
 

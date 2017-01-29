@@ -1,4 +1,4 @@
-package patterns.factory_simple;
+package patterns.factory.simple;
 
 public class PizzaStore {
 

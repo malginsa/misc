@@ -1,4 +1,4 @@
-package patterns.factory;
+package patterns.factory.v2;
 
 class NYStyleCheesePizza extends Pizza {
 
