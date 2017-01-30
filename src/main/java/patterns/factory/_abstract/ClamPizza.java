@@ -1,4 +1,4 @@
-package patterns.factory.v3;
+package patterns.factory._abstract;
 
 public class ClamPizza extends Pizza {
 
@@ -14,6 +14,6 @@ public class ClamPizza extends Pizza {
         dough = ingredientFactory.createDough();
         sauce = ingredientFactory.createSauce();
         cheese = ingredientFactory.createCheese();
-        clam = ingredientFactory.createClam();
+//        clam = ingredientFactory.createClam();
     }
 }

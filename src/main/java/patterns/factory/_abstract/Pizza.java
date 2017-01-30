@@ -1,14 +1,14 @@
-package patterns.factory.v3;
+package patterns.factory._abstract;
 
 public abstract class Pizza {
 
     String name;
     Dough dough;
     Sauce sauce;
-    Veggies veggies[];
     Cheese cheese;
-    Pepperoni pepperoni;
-    Clams clam;
+//    Veggies veggies[];
+//    Pepperoni pepperoni;
+//    Clams clam;
 
     String description = "Abstract pizza";
 
