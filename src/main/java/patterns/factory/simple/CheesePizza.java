@@ -1,4 +1,4 @@
-package patterns.factory.method;
+package patterns.factory.simple;
 
 class CheesePizza extends Pizza {
 
