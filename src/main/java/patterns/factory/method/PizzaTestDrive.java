@@ -1,4 +1,4 @@
-package patterns.factory.v2;
+package patterns.factory.method;
 
 public class PizzaTestDrive {
     public static void main(String[] args) {

@@ -1,12 +1,12 @@
-package patterns.factory.v2;
+package patterns.factory.method;
 
-public class ChicagoPizzaStore extends PizzaStore {
+public class NYPizzaStore extends PizzaStore {
     @Override
     Pizza createPizza(String type) {
         Pizza pizza = null;
         switch (type) {
             case "cheese" :
-                pizza = new ChicagoStyleCheesePizza();
+                pizza = new NYStyleCheesePizza();
                 break;
             case "pepperoni":
 //                pizza = new PepperoniPizza();
