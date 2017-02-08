@@ -1,5 +1,7 @@
 package patterns.factory._abstract;
 
+import patterns.factory._abstract.ingredient.*;
+
 public class NYPizzaIngredientFactory implements PizzaIngredientFactory {
     @Override
     public Dough createDough() {

@@ -1,4 +1,6 @@
-package patterns.factory._abstract;
+package patterns.factory._abstract.ingredient;
+
+import patterns.factory._abstract.ingredient.Dough;
 
 public class ThinCrustDough implements Dough {
 

@@ -1,5 +1,9 @@
 package patterns.factory._abstract;
 
+import patterns.factory._abstract.ingredient.Cheese;
+import patterns.factory._abstract.ingredient.Dough;
+import patterns.factory._abstract.ingredient.Sauce;
+
 public abstract class Pizza {
 
     String name;
