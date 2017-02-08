@@ -1,6 +1,6 @@
 package patterns.factory.simple;
 
-public class PizzaStore {
+public class    PizzaStore {
 
     SimplePizzaFactory factory;
 

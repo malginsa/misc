@@ -1,4 +1,4 @@
-package patterns.singleton.softbinding;
+package patterns.softbinding;
 
 public class B {
 
