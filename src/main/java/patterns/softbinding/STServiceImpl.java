@@ -1,20 +1,20 @@
-package patterns.singleton.softbinding;
+package patterns.softbinding;
 
-public class ThreadSafeSingleton implements STService {
+public class STServiceImpl implements STService {
 
     // It is thread-safe, because creation of an instance
     // and creation field INSTANCE will placed in the same thread.
-    private static ThreadSafeSingleton INSTANCE = new ThreadSafeSingleton();
+    private static STServiceImpl INSTANCE = new STServiceImpl();
 
-    private ThreadSafeSingleton() {}
+    private STServiceImpl() {}
 
-    public static ThreadSafeSingleton get () {
+    public static STServiceImpl doService() {
         return INSTANCE;
     }
 
     public static void main(String[] args) {
 
-        final ThreadSafeSingleton threadSafeSingleton = ThreadSafeSingleton.get();
+        final STServiceImpl sTServiceImpl = STServiceImpl.doService();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package patterns.flyweight;
+package quizful;
 
 public class CheckInteger {
 

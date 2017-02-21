@@ -9,16 +9,16 @@ class Parent3 {
     }
 }
 
-class Child extends Parent3 {
+class Child3 extends Parent3 {
     void print() { // this method is not overloaded the same in Parent, cause that is private
-        System.out.println("in Child");
+        System.out.println("in Child3");
     }
 }
 
 public class MethodNotOverloaded {
     public static void main(String[] args) {
         Parent3 p = new Parent3();
-        Child q = new Child();
+        Child3 q = new Child3();
         p.print(q); // in Parent
     }
 }
