@@ -11,6 +11,7 @@
     <properties>
         <junit.version>4.12</junit.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <jmh-core.version>1.18</jmh-core.version>
     </properties>
 
     <dependencies>
@@ -27,6 +28,12 @@
             <artifactId>mockito-core</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>${jmh-core.version}</version>
         </dependency>
 
     </dependencies>
