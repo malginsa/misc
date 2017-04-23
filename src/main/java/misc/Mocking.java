@@ -18,7 +18,7 @@ public class Mocking {
         FinalClass finalClass = new FinalClass();
         FinalClass concrete = new FinalClass();
         FinalClass mock = mock(FinalClass.class);
-        given
+        // ...
     }
 
     private static void safeUsageOfSpy() {
