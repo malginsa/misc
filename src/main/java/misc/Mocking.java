@@ -1,9 +1,20 @@
 package misc;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.LinkedList;
 import java.util.List;
+
+final class FinalClass {
+
+    final String finalMethod() {
+        return "I'm final";
+    }
+}
 
 public class Mocking {
 
@@ -49,8 +60,4 @@ public class Mocking {
         verify(mockedList).add("one");
         verify(mockedList).clear(); // Exception in thread "main" Wanted but not invoked: list.clear();
     }
-}
-
-final class FinalClass {
-    final String finalMethod() { return "I'm final"; }
 }
