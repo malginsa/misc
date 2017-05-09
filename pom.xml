@@ -10,6 +10,7 @@
 
     <properties>
         <junit.version>4.12</junit.version>
+        <mockito-core.version>2.7.20</mockito-core.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <jmh-core.version>1.18</jmh-core.version>
     </properties>
@@ -20,25 +21,18 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <!--<scope>test</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
+            <version>${mockito-core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
             <version>${jmh-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.10.19</version>
         </dependency>
 
     </dependencies>
