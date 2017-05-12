@@ -16,7 +16,7 @@ public class SynchronizedQueue {
     }
 
     private Integer get() {
-
+        return null;
     }
 
     public static void main(String[] args) {
