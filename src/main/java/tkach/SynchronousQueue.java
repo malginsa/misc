@@ -3,19 +3,16 @@ package tkach;
 import util.Utils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class SynchronousQueue {
 
     private static int runnersCount = 7;
     private Integer baton;
-    private ReentrantLock lock;
     private AtomicBoolean batonIsFree;
     private Object mutex;
 
     public SynchronousQueue() {
         mutex = new Object();
-        lock = new ReentrantLock();
         batonIsFree = new AtomicBoolean(false);
     }
 
