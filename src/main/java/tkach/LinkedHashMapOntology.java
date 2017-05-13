@@ -1,4 +1,4 @@
-package misc;
+package tkach;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class LinkedHashMapOntology {
 
         storage.put(9,"h");
 
-        System.out.println(storage);
+        System.out.println(storage); // 2,9
     }
 
 }

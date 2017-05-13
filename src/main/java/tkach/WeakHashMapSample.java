@@ -16,7 +16,7 @@ public class WeakHashMapSample {
         data = null;
         System.gc();
 
-        for (int i = 1; i < 10000; i++) {
+        for (int i = 1; i < 1_000_000; i++) {
             if (map.isEmpty()) {
                 System.out.println("Empty! i=" + i);
                 break;
