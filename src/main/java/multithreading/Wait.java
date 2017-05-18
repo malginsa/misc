@@ -1,5 +1,7 @@
 package multithreading;
 
+import util.Utils;
+
 public class Wait {
 
     private static Object mutex = new Object();
@@ -15,6 +17,8 @@ public class Wait {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                Utils.delay(3_000);
+                mutex.notify();
             }
             System.out.println("thread " + name + " awaked");
         }
@@ -28,7 +32,7 @@ public class Wait {
         Thread.sleep(3_000);
 
         synchronized (mutex) {
-            mutex.notifyAll();
+            mutex.notify();
         }
     }
 

@@ -9,18 +9,70 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Collections of realizations:
+ * Collections of realizations BlockingQueue:
  * TwoSemaphores,
- * ...
+ * WithWaitNotify
  */
 
 public class LinkedBlockingQueue {
 
     private final static int QUEUE_SIZE = 3;
     private final static int NUMBER_OF_ITEMS_IN_QUEUE = 100;
-    private final static int DELAY_BETWEEN_OPERATIONS = 50;
+    private final static int DELAY_BETWEEN_OPERATIONS = 50; // in milli seconds
 
-    static class TwoSemaphores {
+    interface MyBlockingQueue {
+
+        void put(Integer item) throws InterruptedException;
+
+        Integer get() throws InterruptedException;
+    }
+
+    static class WithWaitNotify implements MyBlockingQueue {
+
+        private final Object mutex;
+        private Queue<Integer> queue;
+        private int capacity;
+
+        public WithWaitNotify(int capacity) {
+            this.capacity = capacity;
+            mutex = new Object();
+            queue = new LinkedList<>();
+        }
+
+        @Override
+        public void put(Integer item) throws InterruptedException {
+            synchronized (mutex) {
+                if (queue.size() >= capacity) {
+                    mutex.wait();
+                }
+                queue.offer(item);
+                mutex.notify();
+                System.out.println("put: " + item + toString());
+            }
+        }
+
+        @Override
+        public Integer get() throws InterruptedException {
+            Integer item;
+            synchronized (mutex) {
+                if (queue.isEmpty()) {
+                    mutex.wait();
+                }
+                item = queue.poll();
+                mutex.notify();
+                System.out.println("got: " + item + toString());
+            }
+            return item;
+        }
+
+        @Override
+        public String toString() {
+            return "  queue={" + queue +
+                   '}';
+        }
+    }
+
+    static class WithTwoSemaphores implements MyBlockingQueue {
 
         private final Semaphore bottom;
         private final Semaphore top;
@@ -28,9 +80,9 @@ public class LinkedBlockingQueue {
         private final Lock lock;
         private Queue<Integer> queue;
 
-        public TwoSemaphores(int size) {
+        public WithTwoSemaphores(int capacity) {
             bottom = new Semaphore(0, true);
-            top = new Semaphore(size, true);
+            top = new Semaphore(capacity, true);
             queue = new LinkedList<>();
             mutex = new Object();
             lock = new ReentrantLock(true);
@@ -72,43 +124,37 @@ public class LinkedBlockingQueue {
         }
     }
 
-
     public static void main(String[] args) throws InterruptedException {
 
-        TwoSemaphores blockingQueue = new TwoSemaphores(QUEUE_SIZE);
+        MyBlockingQueue blockingQueue = new WithWaitNotify(QUEUE_SIZE);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < NUMBER_OF_ITEMS_IN_QUEUE; i++) {
-                    int finalI = i;
-                    Utils.randomDelay(DELAY_BETWEEN_OPERATIONS);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                blockingQueue.put(finalI);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
-                }
+        new Thread(() -> {
+            for (int i = 0; i < NUMBER_OF_ITEMS_IN_QUEUE; i++) {
+                int finalI = i;
+                Utils.randomDelay(DELAY_BETWEEN_OPERATIONS);
+                Thread thread = new Thread(() -> {
+                    try {
+                        blockingQueue.put(finalI);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
+                thread.setName(" : put " + i + " : ");
+                thread.start();
             }
         }).start();
 
         for (int i = 0; i < NUMBER_OF_ITEMS_IN_QUEUE; i++) {
             Utils.randomDelay(DELAY_BETWEEN_OPERATIONS);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        blockingQueue.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            Thread thread = new Thread(() -> {
+                try {
+                    blockingQueue.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            }).start();
+            });
+            thread.setName(" : get " + i + " : ");
+            thread.start();
         }
     }
 }
