@@ -5,10 +5,10 @@ import util.Utils;
 /**
  * Collections of realizations BlockingQueue:
  * TwoSemaphores,
- * WithWaitNotify
+ * BlockingWithWaitNotify
  */
 
-public class LinkedBlockingQueue {
+public class LinkedBlockingQueueSuiteTest {
 
     private final static int QUEUE_SIZE = 3;
     private final static int NUMBER_OF_ITEMS_IN_QUEUE = 100;
@@ -16,13 +16,13 @@ public class LinkedBlockingQueue {
 
     public static void main(String[] args) throws InterruptedException {
 
-        MyBlockingQueue blockingQueue = new WithWaitNotify(QUEUE_SIZE);
+        ConcurrentQueue blockingQueue = new BlockingWithWaitNotify(QUEUE_SIZE);
 
         fireTest(blockingQueue);
 
     }
 
-    private static void fireTest(MyBlockingQueue blockingQueue) {
+    private static void fireTest(ConcurrentQueue blockingQueue) {
         new Thread(() -> {
             for (int i = 0; i < NUMBER_OF_ITEMS_IN_QUEUE; i++) {
                 int finalI = i;

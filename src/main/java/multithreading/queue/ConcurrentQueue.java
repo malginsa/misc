@@ -1,6 +1,6 @@
 package multithreading.queue;
 
-interface MyBlockingQueue {
+interface ConcurrentQueue {
 
     void put(Integer item) throws InterruptedException;
 

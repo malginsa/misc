@@ -6,7 +6,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-class WithTwoSemaphores implements MyBlockingQueue {
+class BlockingWithTwoSemaphores implements ConcurrentQueue {
 
     private final Semaphore bottom;
     private final Semaphore top;
@@ -14,7 +14,7 @@ class WithTwoSemaphores implements MyBlockingQueue {
     private final Lock lock;
     private Queue<Integer> queue;
 
-    public WithTwoSemaphores(int capacity) {
+    public BlockingWithTwoSemaphores(int capacity) {
         bottom = new Semaphore(0, true);
         top = new Semaphore(capacity, true);
         queue = new LinkedList<>();
