@@ -26,7 +26,7 @@ public class BlockingQueueReentrantLock implements ConcurrentQueue {
         mutex.lock();
         try {
             while(queue.size() >= capacity) {
-                isFull.await();
+                isFull.awaitUninterruptibly();
             }
             queue.offer(item);
             System.out.println("put " + item + toString());
