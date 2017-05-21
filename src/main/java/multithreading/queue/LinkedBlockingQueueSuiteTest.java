@@ -5,7 +5,8 @@ import util.Utils;
 /**
  * Collections of realizations BlockingQueue:
  * TwoSemaphores,
- * BlockingWithWaitNotify
+ * BlockingWithWaitNotify,
+ * BlockingQueueReentrantLock
  */
 
 public class LinkedBlockingQueueSuiteTest {
@@ -16,7 +17,7 @@ public class LinkedBlockingQueueSuiteTest {
 
     public static void main(String[] args) throws InterruptedException {
 
-        ConcurrentQueue blockingQueue = new LinkedConcurrentQueue();
+        ConcurrentQueue blockingQueue = new BlockingQueueReentrantLock(3);
 
         fireTest(blockingQueue);
 
