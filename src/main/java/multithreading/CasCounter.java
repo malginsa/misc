@@ -32,6 +32,7 @@ public class CasCounter {
             }
         }
 
+        // TODO this is a bug, troubleshoot it
 //        new Thread(new Task()).start();
 
         for (int i = 0; i < 1_000_000; i++) {
