@@ -16,7 +16,7 @@ public class LinkedBlockingQueueSuiteTest {
 
     public static void main(String[] args) throws InterruptedException {
 
-        ConcurrentQueue blockingQueue = new BlockingWithWaitNotify(QUEUE_SIZE);
+        ConcurrentQueue blockingQueue = new LinkedConcurrentQueue();
 
         fireTest(blockingQueue);
 
