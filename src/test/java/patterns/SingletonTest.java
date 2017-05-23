@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * TODO It's an incorrect test. Fix it. Bug can be caught when an singleton is instantioned first time only.
+ */
 public class SingletonTest {
-    
+
     @Test
     public void generateSingletons() throws InterruptedException {
 
