@@ -2,7 +2,7 @@ package patterns;
 
 import org.junit.Assert;
 import org.junit.Test;
-import patterns.singleton.Lazy;
+import patterns.singleton.DoubleChecked;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,18 +10,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class LazyTest {
+public class SingletonTest {
     
     @Test
     public void generateSingletons() throws InterruptedException {
 
-        Set<Lazy> set = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        Set<DoubleChecked> set = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
         class Filler extends Thread {
             @Override
             public void run() {
-                for (int i = 0; i < 10_000_000; i++) {
-                    set.add(Lazy.getInstance());
+                for (int i = 0; i < 30_000_000; i++) {
+                    set.add(DoubleChecked.getInstance());
                 }
             }
         }

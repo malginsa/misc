@@ -6,8 +6,9 @@ public class Lazy {
     }
 
     /**
-     * When class Lazy is loaded, Inner isn't loaded at once.
+     * 1) When class Lazy is loaded, Inner isn't loaded at once.
      * Inner will be loaded when method getInstance is invoked.
+     * 2) JVM guarantee thread-safe loading/creation of Inner.INSTANCE
      */
 
     private static class Inner {
