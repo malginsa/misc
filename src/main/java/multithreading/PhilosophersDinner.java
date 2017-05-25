@@ -61,10 +61,7 @@ public class PhilosophersDinner {
             sticks[i] = new Stick();
         }
 
-        Set<Set<Stick>> pairs = Collections.newSetFromMap(new ConcurrentHashMap<Set<Stick>, Boolean>());
-
-        pairs.add(new HashSet<Stick>().add(sticks[0]));
-
+//        Set<Set<Stick>> pairs = Collections.newSetFromMap(new ConcurrentHashMap<Set<Stick>, Boolean>());
 
         Philosopher sokrates = new Philosopher("Sokrates", sticks[0], sticks[4]);
         Philosopher nietzsche = new Philosopher("Nietzsche", sticks[0], sticks[1]);
