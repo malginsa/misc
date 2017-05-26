@@ -2,16 +2,23 @@ package multithreading;
 
 import util.Utils;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class PhilosophersDinner {
 
+    private static Lock keeper = new ReentrantLock(true);
+    private static Condition permission = keeper.newCondition();
 
-    static class Stick {
+    static class Stick extends ReentrantLock {
 
+        private String name;
+
+        public Stick(int i) {
+            super();
+            name = "stick " + i;
+        }
     }
 
     static class Philosopher implements Runnable {
@@ -26,28 +33,46 @@ public class PhilosophersDinner {
             this.right = right;
         }
 
-        private void snack() {
-            System.out.println(this.name + " is hungry");
-            synchronized (left) {
-                synchronized (right) {
-                    System.out.println(this.name + " start to snack");
-                    Utils.delay(1_000);
-                    // System.out.println(this.name + " finished to snack");
-                }
-            }
-            // System.out.println(this.name + " is not hungry");
+        private void havingSnack() {
+            System.out.println(name + " having snack");
+            Utils.delay(1_000);
+            left.unlock();
+            right.unlock();
         }
 
         private void meditate() {
-            // System.out.println(this.name + " is starting meditate");
-            Utils.delay(10_000);
-            // System.out.println(this.name + " is finished meditate");
+            System.out.println(name + " meditating");
+            Utils.delay(2_000);
+        }
+
+        private void hungry() throws InterruptedException {
+            System.out.println(name + " is hungry");
+            boolean forever = true;
+            while (forever) { // TODO use condition to exit
+                keeper.lock();
+                permission.await();
+                boolean leftIsAvailable = left.tryLock();
+                boolean rightIsAvailable = right.tryLock();
+                if (leftIsAvailable && rightIsAvailable) { // bingo!
+                    break;
+                } else if (leftIsAvailable) {
+                    left.unlock();
+                } else if (rightIsAvailable) {
+                    right.unlock();
+                }
+            }
         }
 
         @Override
         public void run() {
-            while (true) {
-                this.snack();
+            boolean condition = true;
+            while (condition) {
+                try {
+                    this.hungry();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                this.havingSnack();
                 this.meditate();
             }
         }
@@ -58,13 +83,8 @@ public class PhilosophersDinner {
 
         Stick[] sticks = new Stick[5];
         for (int i = 0; i < sticks.length; i++) {
-            sticks[i] = new Stick();
+            sticks[i] = new Stick(i);
         }
-
-        Set<Set<Stick>> pairs = Collections.newSetFromMap(new ConcurrentHashMap<Set<Stick>, Boolean>());
-
-        pairs.add(new HashSet<Stick>().add(sticks[0]));
-
 
         Philosopher sokrates = new Philosopher("Sokrates", sticks[0], sticks[4]);
         Philosopher nietzsche = new Philosopher("Nietzsche", sticks[0], sticks[1]);
@@ -78,6 +98,9 @@ public class PhilosophersDinner {
         new Thread(avicenna).start();
         new Thread(solovjev).start();
 
-    }
+        Utils.delay(1_000);
+        keeper.lock();
+        permission.signalAll();
 
+    }
 }
