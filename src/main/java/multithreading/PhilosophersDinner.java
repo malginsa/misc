@@ -38,6 +38,10 @@ public class PhilosophersDinner {
             Utils.delay(1_000);
             left.unlock();
             right.unlock();
+            keeper.lock();
+            System.out.println("sending signall to all from " + Thread.currentThread().getName());
+            permission.signalAll();
+            keeper.unlock();
         }
 
         private void meditate() {
@@ -100,7 +104,9 @@ public class PhilosophersDinner {
 
         Utils.delay(1_000);
         keeper.lock();
+        System.out.println("sending signall to all from " + Thread.currentThread().getName());
         permission.signalAll();
+        keeper.unlock();
 
     }
 }
