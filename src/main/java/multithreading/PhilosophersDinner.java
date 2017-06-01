@@ -1,5 +1,7 @@
 package multithreading;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.Utils;
 
 import java.util.concurrent.locks.Condition;
@@ -7,6 +9,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PhilosophersDinner {
+
+    private static final Logger LOG = LogManager.getLogger();
 
     private static Lock keeper = new ReentrantLock(true);
     private static Condition permission = keeper.newCondition();
@@ -34,23 +38,23 @@ public class PhilosophersDinner {
         }
 
         private void havingSnack() {
-            System.out.println(name + " having snack");
+            LOG.info(name + " having snack");
             Utils.delay(1_000);
             left.unlock();
             right.unlock();
             keeper.lock();
-            System.out.println("sending signall to all from " + Thread.currentThread().getName());
+            LOG.info(name + "sending signall to all from ");
             permission.signalAll();
             keeper.unlock();
         }
 
         private void meditate() {
-            System.out.println(name + " meditating");
+            LOG.info(name + " meditating");
             Utils.delay(2_000);
         }
 
         private void hungry() throws InterruptedException {
-            System.out.println(name + " is hungry");
+            LOG.info(name + " is hungry");
             boolean forever = true;
             while (forever) { // TODO use condition to exit
                 keeper.lock();
@@ -80,7 +84,6 @@ public class PhilosophersDinner {
                 this.meditate();
             }
         }
-
     }
 
     public static void main(String[] args) {
@@ -104,7 +107,7 @@ public class PhilosophersDinner {
 
         Utils.delay(1_000);
         keeper.lock();
-        System.out.println("sending signall to all from " + Thread.currentThread().getName());
+        LOG.info("sending signall to all from " + Thread.currentThread().getName());
         permission.signalAll();
         keeper.unlock();
 
