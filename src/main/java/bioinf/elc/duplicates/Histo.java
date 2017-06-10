@@ -5,14 +5,14 @@ import java.util.TreeMap;
 
 public class Histo {
 
-    // key - bin, value - next_id items in bin
+    // key - bin, value - items in bin
     private Map<Integer, Integer> gramma;
 
     public Histo() {
         gramma = new TreeMap<>();
     }
 
-    // Increments the value in the designated bin by 1.
+    // Increments the value in the designated bin by <count>.
     public void increment(int bin, int count) {
         Integer countInBin = gramma.get(bin);
         if (null == countInBin) {
@@ -23,11 +23,12 @@ public class Histo {
         gramma.put(bin, countInBin);
     }
 
+    // Increments the value in the designated bin by 1.
     public void increment(int bin) {
         this.increment(bin, 1);
     }
 
-    // return total next_id of all items
+    // return total items of all items
     public int getTotal() {
         int value = 0;
         for (Map.Entry<Integer, Integer> entry : gramma.entrySet()) {
@@ -36,11 +37,22 @@ public class Histo {
         return value;
     }
 
+    // return summary of all values except for bin is 0 or 1
+    public int getDublicatesCount() {
+        int res = 0;
+        for (Integer integer : gramma.keySet()) {
+            if (integer > 1) {
+                res += gramma.get(integer);
+            }
+        }
+        return res;
+    }
+
     @Override
     public String toString() {
         return gramma.toString()
-                + "  total = "
-                + this.getTotal();
+               + "  duplicates = " + this.getDublicatesCount()
+                + "  total = " + this.getTotal();
     }
 
     @Override
@@ -51,7 +63,6 @@ public class Histo {
         Histo other = (Histo) obj;
 
         return gramma != null ? gramma.equals(other.gramma) : other.gramma == null;
-
     }
 
     public static void main(String[] args) {
