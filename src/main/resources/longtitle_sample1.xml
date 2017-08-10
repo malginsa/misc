@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+
+    <head>HEAD1</head>
+    <head>HEAD2</head>
+    <head>HEAD3</head>
+
+<body>
+
+<p class="longtitle" style='mso-pagination:none'>
+    <a name="1.01"></a>
+    <span style='mso-bookmark:"1\.01"'>TO TOA SIMPLE</span>
+    <enclosed name="1.14">TO TOA ENCLOSED 1
+        <p>TO TOA ENCLOSED 2</p>
+    </enclosed>
+    <p class="Framecontents" style='line-height'>
+        <san style='mso-bidi-font-weight:normal'>
+            <span    style='font-size:10.0pt;'>
+                <o>TO TOAC SIMPLE 1</o>
+            </span>
+        </san>
+    </p>
+
+<simple style='mso-bookmark:"1\.13"'>TO TOAC SIMPLE 2</simple>
+<enclosed name="1.14">TO TOAC ENCLOSED 1
+    <p>TO TOAC ENCLOSED 2</p>
+</enclosed>
+
+</p>
+
+<tail>TAIL</tail>
+
+</body>
+
+</root>
