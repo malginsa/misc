@@ -16,6 +16,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This filter captures text from <p class=longtitle> element.
@@ -27,46 +28,52 @@ import org.xml.sax.helpers.DefaultHandler;
 
 // TODO Is the <p> case sensitive?
 
-public class LongTitleFilter extends DefaultHandler{
+public class LongTitleFilter extends PrintHandler {
+        //extends LcprFilterBase {
 
     private static final Logger LOG = LoggerContext.getContext().getLogger(LongTitleFilter.class.toString());
+    // getLogger(LongTitleFilter.class.toString());
     private static final String TAG_TOAC = "toac";
     private static final String TAG_TAC = "tac";
     private static final AttributesImpl ATTRIBUTES_EMPTY = new AttributesImpl();
 
-    private int pTagCounter = 0; // counts enclosed elements with <p> tag within <p class=longtitle>
-    private boolean inLongTitle = false; // we are parsing elements within <p class=longtitle>
-    private boolean inFramecontents = false; // we are parsing elements within <p class=Framecontents>
+    private int pTagCounter = 0; // counts enclosed elements <p> tag within <p class=longtitle> element
+    private boolean inLongTitle = false; // currently we are parsing elements within <p class=longtitle>
+    private boolean inFramecontents = false; // currently we are parsing elements within <p class=Framecontents>
 
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
-        if (qName.equals("p")) {
-            if ("longtitle".equals(attributes.getValue("class"))) {
+        String className = attributes.getValue("class");
+        if (StringUtils.equalsIgnoreCase("p", qName)) {
+            if (StringUtils.equalsIgnoreCase("longtitle", className)) {
                 inLongTitle = true;
-            } else  if ("Framecontents".equals(attributes.getValue("class"))) {
+            } else if (StringUtils.equalsIgnoreCase("Framecontents", className)) {
                 inFramecontents = true;
             }
-            if (inLongTitle) {
+            if (inLongTitle || inFramecontents) { // There are could be enclosed <p> elements with in <p class=longtitle> element
                 pTagCounter++;
             }
         }
-// ?
-        super.startElement(uri, localName, qName, attributes);
+        if (!inLongTitle) { // no parsing outside <p class=longtitle> element
+            super.startElement(uri, localName, qName, attributes);
+        }
     }
 
     @Override
     public void endElement (String uri, String localName, String qName)
             throws SAXException {
-        if (inLongTitle && qName.equals("p")) {
-            pTagCounter--;
-            if (pTagCounter == 0) {
-                inLongTitle = false;
-                inFramecontents = false;
+        if (inLongTitle) {
+            if (StringUtils.equalsIgnoreCase("p", qName)) {
+                pTagCounter--;
+                if (pTagCounter == 0) {
+                    inLongTitle = false;
+                    inFramecontents = false;
+                }
             }
+        } else {
+            super.endElement(uri, localName, qName);
         }
-// ?
-       super.endElement(uri, localName, qName);
     }
 
     @Override
@@ -78,16 +85,18 @@ public class LongTitleFilter extends DefaultHandler{
             tag = TAG_TAC;
         }
         if (null != tag) {
-            String value = new String(ch, start, length);
-            String trimmed = value.trim();
-            char[] asChars = trimmed.toCharArray();
-            if (!trimmed.isEmpty()) {
-                LOG.debug("longtitle element has been converted to " + "<" + tag + ">" + trimmed + "</" + tag + ">\n");
-                System.out.print("<" + tag + ">" + trimmed + "</" + tag + ">\n");
+            String text = new String(ch, start, length);
+            text = text.trim();
+            if (!text.isEmpty()) {
+                char[] asChars = text.toCharArray();
                 super.startElement("", tag, tag, ATTRIBUTES_EMPTY);
                 super.characters(asChars, 0, asChars.length);
                 super.endElement("", tag, tag);
+                super.characters(new char[]{'\n'}, 0, 1); // new line delimiter for <tac> or <toac> element
+                LOG.debug("longtitle element has been converted to " + "<" + tag + ">" + text + "</" + tag + ">\n");
             }
+        } else {
+            super.characters(ch, start, length);
         }
     }
 }

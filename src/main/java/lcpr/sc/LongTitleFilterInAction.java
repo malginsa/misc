@@ -3,12 +3,11 @@ package lcpr.sc;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
-import xml.sax.MyHandler;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class Parser {
+public class LongTitleFilterInAction {
 
     public static void main(String[] args) throws SAXException, IOException {
         Pattern pattern;
