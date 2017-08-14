@@ -1,18 +1,29 @@
 package xml.sax;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
-public class MyHandler extends DefaultHandler{
+import java.io.IOException;
+
+public class PrintXmlHandler extends DefaultHandler{
+
+    public static void main(String[] args) throws SAXException, IOException {
+        XMLReader p = XMLReaderFactory.createXMLReader();
+        p.setContentHandler(new PrintXmlHandler());
+        p.parse("src\\main\\resources\\longtitle_sample1.xml");
+    }
 
     @Override
     public void startDocument() {
-        System.out.println("starting...");
+        System.out.println("[starting...]");
     }
 
     @Override
     public void endDocument() {
-        System.out.println("\n... ended");
+        System.out.println("\n[... ended]");
     }
 
     @Override
