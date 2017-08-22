@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 public class PercentLanguage {
 
+    private static Pattern percentCodePattern = Pattern.compile("%[0-9a-fA-F]{2}");
+
     private static String[] table = new String[] {
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
             "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"
@@ -27,15 +29,16 @@ public class PercentLanguage {
         return res.toString();
     }
 
-    private int getPercentCodeAt(int start, char[] chars) {
-        if ((start + 2) >= chars.length) {
+    protected int getPercentCodeAt(int start, char[] chars) {
+        if ((start < 0) || (start + 2) >= chars.length) {
             return -1;
         }
-        Pattern pattern = Pattern.compile("%[0-9a-fA-F]{2}");
         String asString = new String(chars, start, 3);
-        Matcher matcher = pattern.matcher(asString);
+        Matcher matcher = percentCodePattern.matcher(asString);
         if (matcher.find()){
-            return Integer.decode("0x" + chars[start + 1] + chars[start + 2]);
+            String codeAsHex = "0x" + chars[start + 1] + chars[start + 2];
+            Integer codeAsInt = Integer.decode(codeAsHex);
+            return codeAsInt;
         }
         return -1;
     }
