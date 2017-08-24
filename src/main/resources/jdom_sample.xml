@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<root>
+    <description>
+        This table is used by the WFPCTRANS program to translate percent
+        language contained in vendor-keyed data.
+        !!! PLEASE NOTE THIS TABLE IS USED FOR SESSION LAW DATA ONLY !!!
+        All 256 possible %'s must be listed (from %00 to %FF)
+        Begin % code in column 1 and the new string in column 9
+        This table was copied from WLAWDB.PROD@B.SYSIN(PCT2HEXT).
+    </description>
+    <rule>
+        <from>%5A</from>
+        <to>!</to>
+    </rule>
+    <rule>
+        <from></from>
+        <to></to>
+    </rule>
+</root>
