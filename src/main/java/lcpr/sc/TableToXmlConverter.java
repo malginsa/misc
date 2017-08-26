@@ -1,6 +1,5 @@
 package lcpr.sc;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
@@ -16,17 +15,16 @@ public class TableToXmlConverter extends DefaultHandler{
 
     public static void main(String[] args) {
 
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader br = null;
-
-        Path output = Paths.get(INPUT_FILE_NAME + ".xml");
-
+        Path inputPath = Paths.get(INPUT_FILE_NAME);
+        Path outputPath = Paths.get(INPUT_FILE_NAME + ".xml");
         try {
-            inputStream = new FileInputStream(new File(INPUT_FILE_NAME)) {};
-            inputStreamReader = new InputStreamReader(inputStream);
-            br = new BufferedReader(inputStreamReader);
-            bw = Files.newBufferedWriter(output, Charset.defaultCharset());
+            byte[] bytes = Files.readAllBytes(inputPath);
+            TextAsBinary binaryAsText = new TextAsBinary(bytes);
+            if (!binaryAsText.isText()) {
+                System.err.println("It seems that input file is not a text file");
+                return;
+            }
+            bw = Files.newBufferedWriter(outputPath, Charset.defaultCharset());
             bw.write("<?xml version=\"1.0\"?>\n");
             bw.write("<root>\n");
             bw.write("<description>\n");
@@ -37,9 +35,11 @@ public class TableToXmlConverter extends DefaultHandler{
                     "\tBegin % code in column 1 and the new string in column 9\n" +
                     "\tThis table was copied from WLAWDB.PROD@B.SYSIN(PCT2HEXT).\n");
             bw.write("</description>\n");
-            String line;
-            while(null != (line = br.readLine())) {
-                parseLine(line);
+            byte[] line;
+            while(null != (line = binaryAsText.nextLine())) {
+                // TODO
+                String asString = line.toString();
+                parseLine(asString);
             }
             bw.write("</root>\n");
         } catch (IOException e) {
@@ -47,18 +47,13 @@ public class TableToXmlConverter extends DefaultHandler{
         } finally {
             try {
                 bw.close();
-                br.close();
-                inputStreamReader.close();
-                inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     private static void parseLine(String line) {
-
         if ((null == line) || line.isEmpty() || (line.charAt(0) != '%') || line.length() < 9) {
             return;
         }
