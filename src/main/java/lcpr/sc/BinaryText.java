@@ -2,7 +2,7 @@ package lcpr.sc;
 
 import java.util.Arrays;
 
-public class TextAsBinary {
+public class BinaryText {
 
     private static final byte[] UNIX_LINE_DELIMITER = new byte[]{0x0A};
     private static final byte[] WINDOWS_LINE_DELIMITER = new byte[]{0x0D, 0x0A};
@@ -11,7 +11,7 @@ public class TextAsBinary {
     private byte[] lineDelimiter = null;
     private int marker = 0;
 
-    public TextAsBinary(byte[] content) {
+    public BinaryText(byte[] content) {
         this.content = content;
         lineDelimiter = detectLineDelimiter();
     }
