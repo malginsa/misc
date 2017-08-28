@@ -11,10 +11,14 @@ import java.util.List;
 
 public class ReadTableFromXml {
 
-    public static void readByJdom(String[] args) {
+    public static void main(String[] args) {
+        readByJdom();
+    }
+
+    public static void readByJdom() {
 
         SAXBuilder builder = new SAXBuilder();
-        File xmlFile = new File("src\\main\\resources\\SLPCT2HX.xml");
+        File xmlFile = new File("src/main/resources/SLPCT2HX.xml");
 
         Document document = null;
         try {
