@@ -5,7 +5,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -14,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class ReadTableFromXml {
+public class TableXmlReader {
 
     private static final String FILE_NAME = "src/main/resources/SLPCT2HX.xml";
     private static final String[][] convertionTable = new String[256][2];
