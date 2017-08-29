@@ -5,7 +5,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -16,26 +15,67 @@ import java.util.List;
 
 public class ReadTableFromXml {
 
-    private static final String FILE_NAME = "src\\main\\resources\\SLPCT2HX.xml";
+    private static final String FILE_NAME = "src/main/resources/SLPCT2HX.xml";
 
 
     private static class ReaderBySax extends DefaultHandler{
 
+        private boolean inTo = false;
+        private boolean inFrom = false;
+        private int index = 0;
+        private String to = null;
+        private String from = null;
+        private String accumulator = null;
+
         @Override
         public void startElement (String uri, String localName, String qName, Attributes attributes) {
-            System.out.print("<" + qName + ">");
+            if ("from".equalsIgnoreCase(qName)) {
+                inFrom = true;
+            }
+            if ("to".equalsIgnoreCase(qName)) {
+                inTo = true;
+            }
         }
 
         @Override
         public void endElement (String uri, String localName, String qName) {
-            System.out.print("</" + qName + ">\n");
+            if ("from".equalsIgnoreCase(qName)) {
+                inFrom = false;
+            }
+            if ("to".equalsIgnoreCase(qName)) {
+                if (null != accumulator) {
+                    System.out.print("|" + accumulator + "|");
+                    accumulator = null;
+                }
+                inTo = false;
+            }
         }
 
         @Override
         public void characters (char ch[], int start, int length) {
-//            for (int i = start; i < (start + length); i++) {
-//                System.out.print(ch[i]);
-//            }
+            if (!inFrom && !inTo) {
+                return;
+            }
+            String value = new String(ch, start, length);
+            if (value.contains("\"") || value.contains("\'") || (null != accumulator)) {
+                if (null == accumulator) {
+                    accumulator = value;
+                } else {
+                    accumulator += value;
+                }
+                return;
+            }
+            if (inFrom) {
+                index++;
+                this.from = value;
+                System.out.print("\n|" + this.from + "|\t");
+                return;
+            }
+            if (inTo) {
+                to = value;
+                System.out.print("|" + to + "|");
+                return;
+            }
         }
 
     }
