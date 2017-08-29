@@ -12,7 +12,7 @@ public class HexExample {
         int i = Byte.toUnsignedInt(b);
         char c = (char) i;
 
-        i = 65600;
+        i = 35500;
         c = (char) i;
 
         int[] codePoints = {156, 2049, 65540};
