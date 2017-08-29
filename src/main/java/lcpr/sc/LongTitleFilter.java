@@ -25,7 +25,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author <a href="mailto:sergei.malgin@thomsonreuters.com">Sergei Malgin</a> UC231018.
  */
 
-// TODO Is the <p> case sensitive?
 
 public class LongTitleFilter extends PrintHandler {
         //extends LcprFilterBase {

@@ -5,17 +5,20 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TableXmlReader {
 
     private static final String FILE_NAME = "src/main/resources/SLPCT2HX.xml";
-    private static final String[][] convertionTable = new String[256][2];
+    private static final Map<String, String> convertionTable = new HashMap<>();
 
-    private static class ReaderBySax extends DefaultHandler{
+    private static class RulesHandler extends DefaultHandler{
 
         private boolean inTo = false;
         private boolean inFrom = false;
         private String accumulator = null;
-        private int index = -1;
+        private String currentKey = null;
 
         @Override
         public void startElement (String uri, String localName, String qName, Attributes attributes) {
@@ -34,7 +37,12 @@ public class TableXmlReader {
             }
             if ("to".equalsIgnoreCase(qName)) {
                 if (null != accumulator) {
-                    convertionTable[index][1] = accumulator;
+                    if (null != currentKey) {
+                        convertionTable.put(currentKey, accumulator);
+                        currentKey = null;
+                    } else {
+// TODO LOG.error
+                    }
                     accumulator = null;
                 }
                 inTo = false;
@@ -48,33 +56,39 @@ public class TableXmlReader {
             }
             String value = new String(ch, start, length);
             if (value.contains("\"") || value.contains("\'") || (null != accumulator)) {
-                if (null == accumulator) {
-                    accumulator = value;
-                } else {
-                    accumulator += value;
-                }
+                incAccumulatorSafely(value);
                 return;
             }
             if (inFrom) {
-                index++;
-                convertionTable[index][0] = value;
-                convertionTable[index][1] = "";
+                currentKey = value;
+                convertionTable.put(value, "");
                 return;
             }
             if (inTo) {
-                convertionTable[index][1] = value;
+                convertionTable.put(currentKey, value);
                 return;
+            }
+        }
+
+        private void incAccumulatorSafely(String value) {
+            if (null == accumulator) {
+                accumulator = value;
+            } else {
+                accumulator += value;
             }
         }
     }
 
     public static void main(String[] args) throws Exception {
         readBySax();
+        convertionTable.forEach((k, v) -> {
+            System.out.println("|"+k+"|\t|"+v+"|");
+        });
     }
 
     public static void readBySax() throws Exception {
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        xmlReader.setContentHandler(new ReaderBySax());
+        xmlReader.setContentHandler(new RulesHandler());
         xmlReader.parse(FILE_NAME);
     }
 }
