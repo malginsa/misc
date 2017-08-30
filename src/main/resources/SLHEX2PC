@@ -1,0 +1,23 @@
+*---------------------------------------------------------------------*
+*  This table is used by the WFPCTRANS program to translate hex codes *
+*  to percent language contained in vendor-keyed data.                *
+*                                                                     *
+*  !!! PLEASE NOTE THIS TABLE IS USED FOR SESSION LAW DATA ONLY !!!   *
+*                                                                     *
+*  This table is only used if H2P=Y.                                  *
+*                                                                     *
+*  Only list the ones to be translated.                               *
+*                                                                     *
+*  Begin % code in column 1 and the new string in column 9            *
+*                                                                     *
+*  This table was copied from WLAWDB.PROD@B.SYSIN(HEX2PCT2).          *
+*---------------------------------------------------------------------*
+       %13
+ù       %14
+
+       %15
+       %16
+á       %17
+       %18
+       %19
+¡       %65
