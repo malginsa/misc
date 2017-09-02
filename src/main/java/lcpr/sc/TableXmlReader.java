@@ -41,7 +41,6 @@ public class TableXmlReader {
                         convertionTable.put(currentKey, accumulator);
                         currentKey = null;
                     } else {
-// TODO LOG.error
                     }
                     accumulator = null;
                 }
