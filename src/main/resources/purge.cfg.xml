@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rootElement>
+    <description>PurgeFilter configuration file contains elements to be deleted</description>
+    <elements>
+        <element>
+            <tag>p</tag>
+            <attributes>
+                <attribute>
+                    <name>class</name>
+                    <value>blank</value>
+                </attribute>
+            </attributes>
+        </element>
+    </elements>
+</rootElement>

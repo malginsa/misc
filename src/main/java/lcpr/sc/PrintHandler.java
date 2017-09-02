@@ -9,7 +9,14 @@ public class PrintHandler extends DefaultHandler{
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
-        System.out.print("<" + qName + ">");
+        System.out.print("<" + qName);
+        for (int i = 0; i < attributes.getLength(); i++) {
+            String name = attributes.getQName(i);
+            String value = attributes.getValue(name);
+            System.out.print(" " + name + "=" + value);
+        }
+
+        System.out.print(">");
     }
 
     @Override

@@ -1,13 +1,4 @@
-/*
- * CharsetEncodingFilter.java
- *
- * Created on: Aug 8, 2017 By: UC231018
- *
- * Copyright 2017: Thomson Reuters Global Resources. All Rights Reserved.
- *
- * Proprietary and Confidential information of TRGR.
- * Disclosure, Use or Reproduction without the written authorization of TRGR is prohibited.
- */
+
 package lcpr.sc;
 
 import org.apache.logging.log4j.core.Logger;
@@ -21,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
  * This filter captures text from <p class=longtitle> element.
  * The first part of the title goes into <toa> element, the remainder goes into <toc> element.
  * Element "p class=Framecontents" within "p class=longtitle" is used as a delimiter.
- *
- * @author <a href="mailto:sergei.malgin@thomsonreuters.com">Sergei Malgin</a> UC231018.
  */
 
 
