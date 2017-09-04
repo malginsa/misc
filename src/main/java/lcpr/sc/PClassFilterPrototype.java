@@ -22,41 +22,72 @@ public class PClassFilterPrototype extends PrintHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
+
         if (!StringUtils.equalsIgnoreCase(qName, "p")) {
             super.startElement(uri, localName, qName, attributes);
             return;
         }
+
         String value = attributes.getValue("class");
         value = value.toLowerCase();
         if (null == value) {
             super.startElement(uri, localName, qName, attributes);
             return;
         }
-        if (StringUtils.equalsIgnoreCase(qName, "section")) {
+
+        if (StringUtils.equalsIgnoreCase(qName, "section")) { // <p class=section
             inClassSection = true;
             return;
         }
+
         super.startElement(uri, localName, qName, attributes);
     }
 
     @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
+
         // TODO to deal with enclosed elements
         if (!inClassSection) {
             super.endElement(uri, localName, qName);
             return;
         }
-        if (conversionToSip || conversionToSmp) {
+
+        if (inClassSection && "p".equalsIgnoreCase(qName)) {
+            inClassSection = false;
+            conversionToSip = false;
+            conversionToSmp = false;
             super.endElement(uri, localName, qName);
-            return;
         }
+
+//        if (!"p".equalsIgnoreCase(qName)) {
+//            return;
+//        }
+//
+//        if (inClassSection && !conversionToSip && !conversionToSmp) {
+//            return;
+//        }
+//
+//        if (inClassSection && (conversionToSip || conversionToSmp)) {
+//            super.endElement(uri, localName, qName);
+//            return;
+//        }
 
     }
 
     public void characters(char ch[], int start, int length)
             throws SAXException {
+
+        if (!inClassSection) {
+            super.characters(ch, start, length);
+            return;
+        }
+
         String text = new String(ch, start, length);
+        if (StringUtils.isEmpty(text.trim())) {
+            return;
+        }
+
         String substring_0_7 = text.substring(0, 7);
         if (inClassSection && "Section".equals(substring_0_7)) {
             conversionToSip = true;
