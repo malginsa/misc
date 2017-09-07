@@ -23,29 +23,64 @@ public class PClassFilterPrototype extends PrintHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
 
+        // ?
+        if (StringUtils.equalsIgnoreCase(qName, "u")) {
+            super.startElement("", "", "centa", EMPTY_ATTRIBUTES);
+            return;
+        }
+
         if (!StringUtils.equalsIgnoreCase(qName, "p")) {
             super.startElement(uri, localName, qName, attributes);
             return;
         }
-
         String value = attributes.getValue("class");
         value = value.toLowerCase();
         if (null == value) {
             super.startElement(uri, localName, qName, attributes);
             return;
         }
+        // <p class=
 
-        if (StringUtils.equalsIgnoreCase(qName, "section")) { // <p class=section
+        if (StringUtils.equalsIgnoreCase(value, "statutesubsection")
+                || StringUtils.equalsIgnoreCase(value, "statutesection")
+                || StringUtils.equalsIgnoreCase(value, "statuteldpcsubsection")
+                || StringUtils.equalsIgnoreCase(value, "clause")
+                || StringUtils.equalsIgnoreCase(value, "subsection")
+                || StringUtils.equalsIgnoreCase(value, "subparagraph")
+                || StringUtils.equalsIgnoreCase(value, "paragraph")
+                || StringUtils.equalsIgnoreCase(value, "statutearticle")
+                || StringUtils.equalsIgnoreCase(value, "statuteclause")
+                || StringUtils.equalsIgnoreCase(value, "statuteparagraph")
+                || StringUtils.equalsIgnoreCase(value, "statutesubparagraph")
+                || StringUtils.equalsIgnoreCase(value, "sectionheading")
+                || StringUtils.equalsIgnoreCase(value, "statutesectionheading")
+                || StringUtils.equalsIgnoreCase(value, "statutesubsection")
+                || StringUtils.equalsIgnoreCase(value, "statuteclause")
+                || StringUtils.equalsIgnoreCase(value, "statutesubclause")
+                || StringUtils.equalsIgnoreCase(value, "tablesubsection")
+                ) {
             inClassSection = true;
+            conversionToSmp = true;
+            super.startElement("", "", "smp", EMPTY_ATTRIBUTES);
             return;
         }
 
+        if (StringUtils.equalsIgnoreCase(value, "section")) {
+            inClassSection = true;
+            return;
+        }
         super.startElement(uri, localName, qName, attributes);
     }
 
     @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
+
+        // ?
+        if (StringUtils.equalsIgnoreCase(qName, "u")) {
+            super.endElement("", "", "centa");
+            return;
+        }
 
         // TODO to deal with enclosed elements
         if (!inClassSection) {
@@ -55,24 +90,19 @@ public class PClassFilterPrototype extends PrintHandler {
 
         if (inClassSection && "p".equalsIgnoreCase(qName)) {
             inClassSection = false;
-            conversionToSip = false;
-            conversionToSmp = false;
-            super.endElement(uri, localName, qName);
+            if (conversionToSip) {
+                conversionToSip = false;
+                super.endElement("", "", "sip");
+                return;
+            }
+            if (conversionToSmp) {
+                conversionToSmp = false;
+                super.endElement("", "", "smp");
+                return;
+            }
         }
 
-//        if (!"p".equalsIgnoreCase(qName)) {
-//            return;
-//        }
-//
-//        if (inClassSection && !conversionToSip && !conversionToSmp) {
-//            return;
-//        }
-//
-//        if (inClassSection && (conversionToSip || conversionToSmp)) {
-//            super.endElement(uri, localName, qName);
-//            return;
-//        }
-
+        super.endElement(uri, localName, qName);
     }
 
     public void characters(char ch[], int start, int length)
@@ -82,13 +112,21 @@ public class PClassFilterPrototype extends PrintHandler {
             super.characters(ch, start, length);
             return;
         }
-
         String text = new String(ch, start, length);
-        if (StringUtils.isEmpty(text.trim())) {
+        text = text.trim();
+        if (StringUtils.isEmpty(text)) {
             return;
         }
 
-        String substring_0_7 = text.substring(0, 7);
+        if (conversionToSip || conversionToSmp) {
+            super.characters(ch, start, length);
+            return;
+        }
+
+        String substring_0_7 = null;
+        if (text.length() > 6) {
+            substring_0_7 = text.substring(0, 7);
+        }
         if (inClassSection && "Section".equals(substring_0_7)) {
             conversionToSip = true;
             super.startElement("", "", "sip", EMPTY_ATTRIBUTES);
@@ -101,6 +139,7 @@ public class PClassFilterPrototype extends PrintHandler {
             super.characters(ch, start, length);
             return;
         }
+
         super.characters(ch, start, length);
     }
 }
