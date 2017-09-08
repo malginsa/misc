@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
-
 public class PClassFilterPrototypeTest {
 
     private static final String[][] DATA_SET = new String[][]{
@@ -81,6 +79,29 @@ public class PClassFilterPrototypeTest {
             {"<root><p class=\"tablesubsection\">TO SMP</p></root>", // input XML
                     "<root><smp>TO SMP</smp></root>",}, // expected XML
 
+            {"<root><p class=\"chapter\">CHAPTER 1</p></root>", // input XML
+                    "<root><hg9>CHAPTER 1</hg9></root>",}, // expected XML
+
+            {"<root><p class=\"chapter\">[CHAPTER</p></root>", // input XML
+                    "<root><hg9>[CHAPTER</hg9></root>",}, // expected XML
+
+            {"<root><p class=\"chapter\">¢aSUBCHAPTER _</p></root>", // input XML
+                    "<root><hg9>¢aSUBCHAPTER _</hg9></root>",}, // expected XML
+
+            {"<root><p class=\"chapter\">_SUBCHAPTER</p></root>", // input XML
+                    "<root><hg9c>_SUBCHAPTER</hg9c></root>",}, // expected XML
+
+            {"<root><p class=\"article\">TO CLPP</p></root>", // input XML
+                    "<root><clpp>TO CLPP</clpp></root>",}, // expected XML
+
+            {"<root><p class=\"part\">TO CLPP</p></root>", // input XML
+                    "<root><clpp>TO CLPP</clpp></root>",}, // expected XML
+
+            {"<root><p class=\"subpart\">TO CLPP</p></root>", // input XML
+                    "<root><clpp>TO CLPP</clpp></root>",}, // expected XML
+
+            {"<root><p class=\"section\">Section<p></p></p></root>", // input XML
+                    "<root><sip>Section<p></p></sip></root>",}, // expected XML
     };
 
     private static PClassFilterPrototype filter;

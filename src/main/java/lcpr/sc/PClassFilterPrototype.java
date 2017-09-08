@@ -7,40 +7,54 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * TODO
  */
 public class PClassFilterPrototype extends PrintHandler {
     //extends LcprFilterBase {
 
-    AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
+    private static final Pattern CHAPTER_VARIATIONS = Pattern.compile("^(¢a)?\\[?(SUB)?CHAPTER.*");
+    private static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
 
     private boolean inClassSection = false;
     private boolean conversionToSmp = false;
     private boolean conversionToSip = false;
+    private boolean inClassChapter = false;
+    private boolean conversionToHg9 = false;
+    private boolean conversionToHg9c = false;
+    private boolean conversionToClpp = false;
+    private int enclosedPCount = 0;
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
 
-        // ?
-        if (StringUtils.equalsIgnoreCase(qName, "u")) {
-            super.startElement("", "", "centa", EMPTY_ATTRIBUTES);
-            return;
-        }
-
         if (!StringUtils.equalsIgnoreCase(qName, "p")) {
             super.startElement(uri, localName, qName, attributes);
             return;
         }
+
+        // p tag encountered
+        if ("p".equalsIgnoreCase(qName)) {
+            enclosedPCount++;
+        }
+
         String value = attributes.getValue("class");
+        if (null == value) {
+            super.startElement(uri, localName, qName, attributes);
+            return;
+        }
+
         value = value.toLowerCase();
         if (null == value) {
             super.startElement(uri, localName, qName, attributes);
             return;
         }
-        // <p class=
 
+        // <p class=
         if (StringUtils.equalsIgnoreCase(value, "statutesubsection")
                 || StringUtils.equalsIgnoreCase(value, "statutesection")
                 || StringUtils.equalsIgnoreCase(value, "statuteldpcsubsection")
@@ -65,8 +79,23 @@ public class PClassFilterPrototype extends PrintHandler {
             return;
         }
 
+        // <p class=section..
         if (StringUtils.equalsIgnoreCase(value, "section")) {
             inClassSection = true;
+            return;
+        }
+
+        // <p class=chapter..
+        if (StringUtils.equalsIgnoreCase(value, "chapter")) {
+            inClassChapter = true;
+            return;
+        }
+
+        if (StringUtils.equalsIgnoreCase(value, "article")
+                || StringUtils.equalsIgnoreCase(value, "part")
+                || StringUtils.equalsIgnoreCase(value, "subpart")) {
+            conversionToClpp = true;
+            super.startElement("", "", "clpp", EMPTY_ATTRIBUTES);
             return;
         }
         super.startElement(uri, localName, qName, attributes);
@@ -76,30 +105,41 @@ public class PClassFilterPrototype extends PrintHandler {
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
 
-        // ?
-        if (StringUtils.equalsIgnoreCase(qName, "u")) {
-            super.endElement("", "", "centa");
-            return;
+        // p tag encountered
+        if ("p".equalsIgnoreCase(qName)) {
+            enclosedPCount--;
         }
 
-        // TODO to deal with enclosed elements
-        if (!inClassSection) {
-            super.endElement(uri, localName, qName);
-            return;
-        }
-
-        if (inClassSection && "p".equalsIgnoreCase(qName)) {
+        if (inClassSection && (enclosedPCount == 0)) {
             inClassSection = false;
             if (conversionToSip) {
                 conversionToSip = false;
                 super.endElement("", "", "sip");
-                return;
             }
             if (conversionToSmp) {
                 conversionToSmp = false;
                 super.endElement("", "", "smp");
-                return;
             }
+            return;
+        }
+
+        if (inClassChapter && (enclosedPCount == 0)) {
+            inClassChapter = false;
+            if (conversionToHg9) {
+                conversionToHg9 = false;
+                super.endElement("", "", "hg9");
+            }
+            if (conversionToHg9c) {
+                conversionToHg9c = false;
+                super.endElement("", "", "hg9c");
+            }
+            return;
+        }
+
+        if (conversionToClpp && (enclosedPCount == 0)) {
+            conversionToClpp = false;
+            super.endElement("", "", "clpp");
+            return;
         }
 
         super.endElement(uri, localName, qName);
@@ -108,10 +148,6 @@ public class PClassFilterPrototype extends PrintHandler {
     public void characters(char ch[], int start, int length)
             throws SAXException {
 
-        if (!inClassSection) {
-            super.characters(ch, start, length);
-            return;
-        }
         String text = new String(ch, start, length);
         text = text.trim();
         if (StringUtils.isEmpty(text)) {
@@ -136,6 +172,20 @@ public class PClassFilterPrototype extends PrintHandler {
         if (inClassSection) {
             conversionToSmp = true;
             super.startElement("", "", "smp", EMPTY_ATTRIBUTES);
+            super.characters(ch, start, length);
+            return;
+        }
+
+        Matcher matcher = CHAPTER_VARIATIONS.matcher(text);
+        if (inClassChapter && matcher.matches()) {
+            conversionToHg9 = true;
+            super.startElement("", "", "hg9", EMPTY_ATTRIBUTES);
+            super.characters(ch, start, length);
+            return;
+        }
+        if (inClassChapter) {
+            conversionToHg9c = true;
+            super.startElement("", "", "hg9c", EMPTY_ATTRIBUTES);
             super.characters(ch, start, length);
             return;
         }
