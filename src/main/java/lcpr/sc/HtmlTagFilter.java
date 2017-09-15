@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * TODO
  */
-public class PClassFilterPrototype extends PrintHandler {
+public class HtmlTagFilter extends PrintHandler {
     //extends LcprFilterBase {
 
     private static final Pattern CHAPTER_VARIATIONS = Pattern.compile("^(¢a)?\\[?(SUB)?CHAPTER.*");

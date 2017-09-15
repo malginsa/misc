@@ -104,17 +104,17 @@ public class PClassFilterPrototypeTest {
                     "<root><sip>Section<p></p></sip></root>",}, // expected XML
     };
 
-    private static PClassFilterPrototype filter;
+    private static HtmlTagFilter filter;
 
     @BeforeClass
     public static void init() {
-        filter = new PClassFilterPrototype();
+        filter = new HtmlTagFilter();
     }
 
     @Test
     public void testDataSets() throws SAXException, IOException {
         XMLReader p = XMLReaderFactory.createXMLReader();
-        p.setContentHandler(new PClassFilterPrototype());
+        p.setContentHandler(new HtmlTagFilter());
         ByteArrayOutputStream baos;
         PrintStream ps;
         PrintStream old;
