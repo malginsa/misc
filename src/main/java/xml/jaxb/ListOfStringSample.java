@@ -13,7 +13,7 @@ public class ListOfStringSample {
     @XmlRootElement(name = "list")
     static class ListHolder {
 
-        private List<String> list = new ArrayList<String>();
+        private List<String> list;
 
         public List<String> getList() {
             return list;
