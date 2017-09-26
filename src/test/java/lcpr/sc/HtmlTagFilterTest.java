@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
 
-public class PClassFilterPrototypeTest {
+public class HtmlTagFilterTest {
 
     private static final String[][] DATA_SET = new String[][]{
             {"<root/>", // input XML
