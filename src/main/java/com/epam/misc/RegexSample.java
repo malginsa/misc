@@ -1,11 +1,63 @@
 package com.epam.misc;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexSample {
+public class RegexSample
+{
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
+//        m1();
+//        m2();
+//        m3();
+        m4();
+    }
 
+    private static void m4()
+    {
+//        String text = "<centa> (b1).rest ";
+        String text = "<centd> (b1).rest ";
+//        String text = "(b1).rest ";
+        Pattern pattern = Pattern.compile("(<cent[ad]> )?(\\(\\S+\\))(.*)");// <centa>, <centd>
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find())
+        {
+            String result = "";
+            if (null != matcher.group(1)) {
+                result = matcher.group(1);
+            }
+            result += matcher.group(2);
+            result += matcher.group(3);
+            System.out.println('|' + result + '|');
+        }
+    }
+
+    private static void m3()
+    {
+        String text = "(b) The chairman of the commission shall ($65,000.00) per dollars ($62,500.00) per annum.\n";
+        Pattern pattern = Pattern.compile("^(\\(\\S+\\))(.*)");
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find())
+        {
+            System.out.println("|" + matcher.group(1) + "|");
+            System.out.println("|" + matcher.group(2) + "|");
+        }
+    }
+
+    private static void m2()
+    {
+        Pattern pattern = Pattern.compile("^Section (\\d+)\\.(.*)");
+        Matcher matcher = pattern.matcher("Section 1.  Section 201 of the act of August 5, 1941 (P.L.752, No.286), known as the Civil Service Act, amended October 5, 2011 (P.L.310, No.76), is amended to read:");
+        if (matcher.find())
+        {
+            System.out.println("|" + matcher.group(1) + "|");
+            System.out.println("|" + matcher.group(2) + "|");
+        }
+    }
+
+    private static void m1()
+    {
         Pattern pattern = Pattern.compile("^(¢a)?\\[?(SUB)?CHAPTER.*");
 
         System.out.println(pattern.matcher("_CHAPTER").matches()); // false
@@ -18,5 +70,15 @@ public class RegexSample {
         System.out.println(pattern.matcher("SUBCHAPTER").matches()); // true
         System.out.println(pattern.matcher("[SUBCHAPTER").matches()); // true
         System.out.println(pattern.matcher("¢aSUBCHAPTER _").matches()); // true
+
+        Pattern compile = Pattern.compile("^[ \\*]+$");
+        if (compile.matcher("  * * *").find())
+        {
+            System.out.println("matched");
+        }
+        if (compile.matcher(" 1 * * *").find())
+        {
+            System.out.println("doesn't matched");
+        }
     }
 }
