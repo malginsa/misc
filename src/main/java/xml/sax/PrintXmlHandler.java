@@ -13,7 +13,8 @@ public class PrintXmlHandler extends DefaultHandler{
     public static void main(String[] args) throws SAXException, IOException {
         XMLReader p = XMLReaderFactory.createXMLReader();
         p.setContentHandler(new PrintXmlHandler());
-        p.parse("src\\main\\resources\\longtitle_sample1.xml");
+//        p.parse("src\\main\\resources\\longtitle_sample1.xml");
+        p.parse("src\\main\\resources\\HB0192_D161122_IN.txtTMP.xml");
     }
 
     @Override
@@ -39,7 +40,7 @@ public class PrintXmlHandler extends DefaultHandler{
     @Override
     public void characters (char ch[], int start, int length) {
         for (int i = start; i < (start + length); i++) {
-            System.out.print(ch[i]);
+//            System.out.print(ch[i]);
         }
     }
 

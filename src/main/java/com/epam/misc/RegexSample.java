@@ -11,7 +11,19 @@ public class RegexSample
 //        m1();
 //        m2();
 //        m3();
-        m4();
+//        m4();
+        m5();
+    }
+
+    private static void m5()
+    {
+        Pattern pattern = Pattern.compile("\\[");
+        Matcher matcher = pattern.matcher("-[--");
+        if (matcher.find())
+        {
+            System.out.println("matched");
+        }
+        System.out.println("-[--".replaceAll("\\[", "+"));
     }
 
     private static void m4()
