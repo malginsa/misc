@@ -8,8 +8,10 @@ public class StackSuite
     public static void main(String[] args)
     {
         Deque<String> stack = new LinkedList<>();
-        stack.push("one");
-        stack.push("two");
+        stack.addFirst("one");
+        stack.addFirst("two");
+        stack.addFirst("three");
+        stack.pollFirst();
         System.out.println(stack);
     }
 }
