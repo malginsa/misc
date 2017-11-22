@@ -1,5 +1,7 @@
 package com.epam.misc;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +14,70 @@ public class RegexSample
 //        m2();
 //        m3();
 //        m4();
-        m5();
+//        m5();
+//        m6();
+        m7();
+//        m8();
+    }
+
+    private static void m8()
+    {
+        String text = "1\n23";
+        Pattern pattern = Pattern.compile("^([12345\n]+)$");// <centa>, <centd>
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find())
+        {
+            System.out.println("matched");
+        }
+    }
+
+    private static void m7()
+    {
+        String text = "<centa>(ii) \n$##65533;The first\n $##65533The second";
+        Pattern pattern = Pattern.compile("^(<centa> ?)?+(\\(\\S+\\)){1}+([\\s\\S\\n]+)$");// <centa>, <centd>
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find())
+        {
+            System.out.println("1st group: |" + matcher.group(1) + '|');
+            System.out.println("2nd group: |" + matcher.group(2) + '|');
+            System.out.println("3rd group: |" + matcher.group(3) + '|');
+        }
+    }
+
+    private static void m6()
+    {
+
+        int multiline = Pattern.MULTILINE;
+
+        System.out.println("multiline = " + multiline);
+
+        String text = "<centa>(ii) \n$##65533;The first\n $##65533The second";
+
+        String[] split = text.split("\n");
+
+        text = split[0];
+
+        Pattern pattern = Pattern.compile("^(<centa> ?)?+(\\(\\S+\\)){1}+(.+)$");// <centa>, <centd>
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find())
+        {
+            text = "";
+            if (null != matcher.group(1))
+            {
+                text = matcher.group(1);
+            }
+            text += matcher.group(2) + "$##ensp;" + matcher.group(3).trim();
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(text);
+        for (int i = 1; i < split.length; i++)
+        {
+            builder.append('\n');
+            builder.append(split[i]);
+        }
+        text = builder.toString();
+        System.out.println('|' + text + '|');
     }
 
     private static void m5()
