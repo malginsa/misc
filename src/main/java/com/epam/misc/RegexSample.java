@@ -16,8 +16,20 @@ public class RegexSample
 //        m4();
 //        m5();
 //        m6();
-        m7();
+//        m7();
 //        m8();
+        m9();
+    }
+
+    private static void m9()
+    {
+        String text = "%HSection aV4.%H·281.348(...)";
+        Pattern pattern = Pattern.compile("^%HSection [\\da-zA-Z]+.%H·([\\d\\.]+)\\D");
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find())
+        {
+            System.out.println("group 1: " + matcher.group(1));
+        }
     }
 
     private static void m8()
