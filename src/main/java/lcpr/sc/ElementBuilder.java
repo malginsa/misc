@@ -14,6 +14,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Source Conversion: TODO
  *
@@ -29,7 +32,7 @@ public class ElementBuilder extends LcprFilterBase
     private StringBuilder builder;
     private int nestingLevel;
     private ElementContext elementContext;
-    private List<ElementObserver> observers;
+    private List<IElementObserver> observers = new ArrayList<>();
 
     /**
      * New element creation
@@ -62,10 +65,20 @@ public class ElementBuilder extends LcprFilterBase
 
     private void notifyObservers()
     {
-        for (ElementObserver observer : observers)
+        for (IElementObserver observer : observers)
         {
             observer.handleEvent(elementContext);
         }
+    }
+
+    public void addObserver(IElementObserver observer)
+    {
+        observers.add(observer);
+    }
+
+    public void deleteObserver(IElementObserver observer)
+    {
+        observers.remove(observer);
     }
 
     @Override
@@ -100,7 +113,6 @@ public class ElementBuilder extends LcprFilterBase
         if (StringUtils.equalsIgnoreCase(qName, ScTag.XAMPEX.getTag()))
         {
             super.endElement(uri, localName, qName);
-            safeDecreasingOfNestingLevel();
             return;
         }
         if (nestingLevel == 1)
@@ -108,7 +120,7 @@ public class ElementBuilder extends LcprFilterBase
             String text = builder.toString();
             elementContext.putNextElement(qName, text);
             builder = null;
-            safeDecreasingOfNestingLevel();
+            nestingLevel--;
             notifyObservers();
             if (!elementContext.isCurrentElementToDelete())
             {
@@ -120,7 +132,7 @@ public class ElementBuilder extends LcprFilterBase
         if (nestingLevel == 2)
         {
             builder.append("</").append(qName).append(">");
-            safeDecreasingOfNestingLevel();
+            nestingLevel--;
             return;
         }
         throw new SAXException("end tag " + qName +
