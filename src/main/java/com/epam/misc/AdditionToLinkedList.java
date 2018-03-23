@@ -9,8 +9,15 @@ public class AdditionToLinkedList {
         LinkedList<String> strings = new LinkedList<>();
 
         strings.add("one");
-        strings.add(1, "two");
-        strings.add(2, "three");
+
+        if (strings.size() < 2)
+        {
+            strings.addLast("three");
+        }
+        else
+        {
+            strings.add(2, "three");
+        }
 
         System.out.println(strings);
     }
