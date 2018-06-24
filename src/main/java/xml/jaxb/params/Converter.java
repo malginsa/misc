@@ -12,9 +12,26 @@ import java.util.List;
 
 public class Converter
 {
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlRootElement(name = "root")
+    static class ParamsHolder
+    {
+        @XmlElement(name = "param", required = true)
+        private List<Parameter> params;
+
+        public List<Parameter> getParams()
+        {
+            return params;
+        }
+
+        public void setParams(List<Parameter> params)
+        {
+            this.params = params;
+        }
+    }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    static class ParamHolder
+    static class Parameter
     {
         @XmlElement(name = "name", required = true)
         private String name;
@@ -52,28 +69,10 @@ public class Converter
         }
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlRootElement(name = "root")
-    static class RootElement
-    {
-        @XmlElement(name = "param", required = true)
-        private List<ParamHolder> params;
-
-        public List<ParamHolder> getParams()
-        {
-            return params;
-        }
-
-        public void setParams(List<ParamHolder> params)
-        {
-            this.params = params;
-        }
-    }
-
     public static void main(String[] args) throws JAXBException
     {
 
-        RootElement rootElement = (RootElement) JAXBContext.newInstance(RootElement.class)
+        ParamsHolder rootElement = (ParamsHolder) JAXBContext.newInstance(ParamsHolder.class)
                 .createUnmarshaller()
                 .unmarshal(new StringReader(
                         "<root>\n" +
@@ -83,7 +82,7 @@ public class Converter
                         "</root>"));
 
         HashMap<String, String> map = new HashMap<>();
-        for (ParamHolder param : rootElement.getParams())
+        for (Parameter param : rootElement.getParams())
         {
             map.put(param.getName(), param.getValue());
         }
