@@ -1,6 +1,6 @@
-package xml.jaxb.parser;
+package xml.jaxb.purge.parser;
 
-import xml.jaxb.entity.RootElement;
+import xml.jaxb.purge.entity.RootElement;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

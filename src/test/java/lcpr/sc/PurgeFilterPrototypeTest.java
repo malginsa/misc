@@ -8,11 +8,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
-import xml.jaxb.entity.Attribute;
+import xml.jaxb.purge.entity.Attribute;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.util.ArrayList;
