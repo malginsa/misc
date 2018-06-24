@@ -7,58 +7,90 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Converter
 {
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlRootElement(name = "params")
-    static class ParamsHolder
+    static class ParamHolder
     {
         @XmlElement(name = "name", required = true)
-        List<String> names = new ArrayList<String>();
+        private String name;
 
-        @XmlElement(name = "value", required = false)
-        List<String> values = new ArrayList<String>();
+        @XmlElement(name = "value")
+        private String value;
 
-        public List<String> getNames() {
-            return names;
+        public String getName()
+        {
+            return name;
         }
 
-        public void setNames(List<String> names) {
-            this.names = names;
+        public void setName(String name)
+        {
+            this.name = name;
         }
 
-        public List<String> getValues() {
-            return values;
+        public String getValue()
+        {
+            return value;
         }
 
-        public void setValues(List<String> values) {
-            this.values = values;
+        public void setValue(String value)
+        {
+            this.value = value;
         }
 
         @Override
         public String toString()
         {
-            return "ParamsHolder{" +
-                    "names=" + names +
-                    ", values=" + values +
+            return "ParamHolder{" +
+                    "name='" + name + '\'' +
+                    ", value='" + value + '\'' +
                     '}';
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlRootElement(name = "root")
+    static class RootElement
+    {
+        @XmlElement(name = "param", required = true)
+        private List<ParamHolder> params;
+
+        public List<ParamHolder> getParams()
+        {
+            return params;
+        }
+
+        public void setParams(List<ParamHolder> params)
+        {
+            this.params = params;
         }
     }
 
     public static void main(String[] args) throws JAXBException
     {
 
-        ParamsHolder paramsHolder = (ParamsHolder) JAXBContext.newInstance(ParamsHolder.class)
+        RootElement rootElement = (RootElement) JAXBContext.newInstance(RootElement.class)
                 .createUnmarshaller()
-                .unmarshal(new StringReader("<params>\n" +
-                        "\t<name>sste</name><value>(a)</value>\n" +
-                        "\t<name>scp3</name><value>2(ip)</value>\n" +
-                        "\t<name>class.number</name><value>25</value>\n" +
-                        "</params>\n"));
-        System.out.println(paramsHolder);
+                .unmarshal(new StringReader(
+                        "<root>\n" +
+                                "\t<param> <name>sste</name> <value>(a)</value> </param>\n" +
+                                "\t<param> <name>scp3</name> </param>\n" +
+                                "\t<param> <name>class.number</name> <value>25</value> </param>\n" +
+                        "</root>"));
+
+        HashMap<String, String> map = new HashMap<>();
+        for (ParamHolder param : rootElement.getParams())
+        {
+            map.put(param.getName(), param.getValue());
+        }
+
+        for (String key : map.keySet())
+        {
+            System.out.println(key + " " + map.get(key));
+        }
     }
 }
