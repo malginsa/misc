@@ -5,9 +5,9 @@ package lcpr.sc;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import xml.jaxb.entity.Attribute;
-import xml.jaxb.entity.Element;
-import xml.jaxb.entity.RootElement;
+import xml.jaxb.purge.entity.Attribute;
+import xml.jaxb.purge.entity.Element;
+import xml.jaxb.purge.entity.RootElement;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

@@ -1,4 +1,4 @@
-package xml.jaxb.entity;
+package xml.jaxb.purge.entity;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
