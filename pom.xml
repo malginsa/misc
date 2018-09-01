@@ -14,7 +14,7 @@
         <mockito-core.version>2.7.20</mockito-core.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <jmh-core.version>1.18</jmh-core.version>
-        <!--<kotlin.version>1.1.2-4</kotlin.version>-->
+        <kotlin.version>1.2.61</kotlin.version>
     </properties>
 
     <dependencies>
@@ -42,17 +42,6 @@
             <artifactId>jmh-core</artifactId>
             <version>${jmh-core.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.jetbrains.kotlin</groupId>-->
-            <!--<artifactId>kotlin-stdlib</artifactId>-->
-            <!--<version>${kotlin.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.jetbrains.kotlin</groupId>-->
-            <!--<artifactId>kotlin-test</artifactId>-->
-            <!--<version>${kotlin.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
@@ -90,6 +79,17 @@
             <artifactId>guava</artifactId>
             <version>25.1-jre</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -115,6 +115,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
