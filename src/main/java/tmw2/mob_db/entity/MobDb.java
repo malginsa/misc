@@ -188,12 +188,10 @@ public class MobDb {
 //        System.out.println(mobDb.lookupItem("Biscuit"));
 //        System.out.println(mobDb.lookupMob("Fafi"));
 
-//        System.out.println(mobDb.askDropsByItem("LeatherPatch"));
-        System.out.println(mobDb.askDropsByMob("Snake"));
-        System.out.println(mobDb.askDropsByMob("CaveSnake"));
+        System.out.println(mobDb.askDropsByItem("SilverOre"));
+//        System.out.println(mobDb.askDropsByMob("Snake"));
 
-//        System.out.println(mobDb.lookupAndAsk("Biscuit"));
-//        System.out.println(mobDb.lookupAndAsk("Ginger"));
-//        System.out.println(mobDb.lookupAndAsk("CopperSlime"));
+//        System.out.println(mobDb.lookupAndAsk("PileOfAsh"));
+//        System.out.println(mobDb.lookupAndAsk("CloverPatch"));
     }
 }
