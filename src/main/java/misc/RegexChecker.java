@@ -11,7 +11,8 @@ public class RegexChecker
     public static void main(String[] args)
     {
 //        regexChecker("\\s[]A-Za-z]{2,20}\\s", LONG_STRING);
-        regexChecker("A[KLRZ]|C[AOT]", LONG_STRING);
+//        regexChecker("A[KLRZ]|C[AOT]", LONG_STRING);
+        regexChecker("(?<=\\s\\(\\w{1,20})(-)(?=\\w+\\)\\s)", " (non-debatable) ");
     }
 
     public static void regexChecker(String regex, String str2Check)
