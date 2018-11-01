@@ -1,4 +1,4 @@
-package misc;
+package com.epam.misc.dynamic_programming;
 
 public class TwoBallsOptimized extends TwoBalls{
 

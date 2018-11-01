@@ -1,10 +1,10 @@
-package misc;
+package com.epam.misc.dynamic_programming;
 
+import com.epam.misc.dynamic_programming.TwoBalls;
+import com.epam.misc.dynamic_programming.TwoBallsOptimized;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class TwoBallsTest {
 
