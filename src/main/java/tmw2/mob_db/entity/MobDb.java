@@ -2,7 +2,6 @@ package tmw2.mob_db.entity;
 
 import com.google.common.io.Files;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +45,6 @@ public class MobDb {
         public String toString() { return "Drop{" + " nameItem=" + nameItem + " nameMob=" + nameMob + " probability=" + probability +"}\n"; }
     }
 
-    @NotNull
     private void readMobDB() throws IOException {
 
         List<String> lines = Files.readLines(
@@ -94,7 +92,6 @@ public class MobDb {
         mobs.addAll(mobsSet);
     }
 
-    @NotNull
     private Map<String, List<Drop>> createDropsByItem() {
         Map<String, List<Drop>> dropsByItem = new HashMap<>();
         for (Drop drop : drops) {
@@ -109,7 +106,6 @@ public class MobDb {
         return dropsByItem;
     }
 
-    @NotNull
     private Map<String, List<Drop>> createDropsByMob() {
         Map<String, List<Drop>> dropsByMobs = new HashMap<>();
         for (Drop drop : drops) {
