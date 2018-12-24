@@ -1,5 +1,8 @@
 package tmw;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.h2.tools.Server;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -22,14 +25,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class OnlineUsersWatcher {
+public class OnlineUsersTracker {
+
+    private static final Logger LOG = LogManager.getLogger();
     private static final Pattern DATE_TIME = Pattern.compile(
             "\\((\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2})\\)");
     private static final DateTimeFormatter TMW_DATE_TIME_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final String INSERT_PARAMETERIZED =
-            "INSERT INTO snapshot(name, timestamp) VALUES (?, ?);";
-    private static final List<String> BOTS = Arrays.asList(
+            "INSERT INTO snapshot(name, timestamp) VALUES (?, ?)";
+    private static final List<String> IGNORABLE_USERS = Arrays.asList(
             "Corson", "Bukavac", "playerone", "Aamon", "Abezethibou",
             "Abraxax", "Abyzou", "Adrammelech", "Aeshma", "Agaliarept",
             "Agrat", "Agiel", "Haborym", "Alloces", "Allu", "Amaymon",
@@ -42,28 +47,39 @@ public class OnlineUsersWatcher {
             "Demiurge", "Drekavac", "Dzoavits", "Eblis", "Eisheth", "Eligos",
             "Foras", "Forcas", "Forras", "Forneus", "Furcas", "Caprice",
             "Gaap", "Gaderel", "Gaki", "Gamigin", "Glasya", "Gremory",
-            "Grigori", "Gualichu", "Guayota"
+            "Grigori", "Gualichu", "Guayota", "Haagenti", "Hauras", "Haures",
+            "Havres", "Hinn", "Ipos", "Jikininki", "Kabandha", "Kasadya",
+            "Kroni", "Killakee", "Kukudh", "Kumbhakarna", "Lechies"
     );
 
 
     public static void main(String[] args) throws Exception {
-        OnlineUsersWatcher watcher = new OnlineUsersWatcher();
+        OnlineUsersTracker watcher = new OnlineUsersTracker();
         Connection conn;
         conn = watcher.establishDbConnection();
+        watcher.startDbServer();
         while (conn != null) {
             OnlineUsersSnapshot snapshot = watcher.getSnapshotNow();
             watcher.removeBots(snapshot.users);
             watcher.storeSnapshotToDb(snapshot, conn);
             System.out.println(snapshot);
 //            watcher.readH2(conn);
-            Utils.delay(10_000);
+            Utils.delay(9_000);
         }
         conn.close();
-//        startTcpServer();
+    }
+
+    private void startDbServer() {
+        try {
+            Server.createWebServer("-webAllowOthers","-webPort","8082").start();
+            Server.createTcpServer("-tcpAllowOthers","-tcpPort","9092").start();
+        } catch (SQLException e) {
+            LOG.error("Can't instantiate d2 database driver" + e);
+        }
     }
 
     private void removeBots(List<String> users) {
-        users.removeAll(BOTS);
+        users.removeAll(IGNORABLE_USERS);
     }
 
     private Connection establishDbConnection() {
@@ -71,17 +87,19 @@ public class OnlineUsersWatcher {
         try {
             Class.forName("org.h2.Driver").newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            LOG.error("Can't instantiate d2 database driver" + e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            LOG.error("Can't get access to d2 database driver" + e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOG.error("Can't find d2 database driver" + e);
         }
         try {
             conn = DriverManager.getConnection(
-                    "jdbc:h2:~/tmw_informer", "admin", "Yw3w79Ziw8DuhDZ");
+                    "jdbc:h2:~/tmw_informer;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=41444",
+                    "admin",
+                    "Yw3w79Ziw8DuhDZ");
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Can't get connection to d2 database driver" + e);
         }
         if (conn == null) {
             System.exit(1);
