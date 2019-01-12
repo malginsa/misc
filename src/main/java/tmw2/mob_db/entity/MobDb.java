@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -127,7 +128,7 @@ public class MobDb {
     }
 
     public Map<String, Double> askDropsByItem(String requestedItem) {
-        Map<String, Double> result = new HashMap<>();
+        Map<String, Double> result = new TreeMap<>();
         List<Drop> drops = dropsByItem.get(requestedItem);
         if (drops == null) return result;
         for (Drop drop : drops) {
@@ -140,7 +141,7 @@ public class MobDb {
     }
 
     public Map<String, Double> askDropsByMob(String requestedMob) {
-        Map<String, Double> result = new HashMap<>();
+        Map<String, Double> result = new TreeMap<>();
         List<Drop> drops = dropsByMob.get(requestedMob);
         if (drops == null) return result;
         for (Drop drop : drops) {
@@ -181,11 +182,13 @@ public class MobDb {
         MobDb mobDb = new MobDb();
         mobDb.init();
 
-//        System.out.println(mobDb.lookupItem("Biscuit"));
+        System.out.println(mobDb.lookupItem("Spear"));
 //        System.out.println(mobDb.lookupMob("Fafi"));
 
-        System.out.println(mobDb.askDropsByItem("SilverOre"));
-//        System.out.println(mobDb.askDropsByMob("Snake"));
+//        System.out.println(mobDb.askDropsByItem("SquirrelPelt"));
+//        System.out.println(mobDb.askDropsByItem("LeatherPatch"));
+//        System.out.println(mobDb.askDropsByItem("SilverOre"));
+//        System.out.println(mobDb.askDropsByMob("Centaur"));
 
 //        System.out.println(mobDb.lookupAndAsk("PileOfAsh"));
 //        System.out.println(mobDb.lookupAndAsk("CloverPatch"));
