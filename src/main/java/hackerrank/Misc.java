@@ -2,6 +2,7 @@ package hackerrank;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
@@ -13,6 +14,8 @@ public class Misc {
 //        plusMinus(new int[]{1,2,-3});
 //        staircase(6);
 //        miniMaxSum(new int[]{1,3,5,7,9});
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+//        map.floorKey()
     }
 
     static int birthdayCakeCandles(int[] ar) {
