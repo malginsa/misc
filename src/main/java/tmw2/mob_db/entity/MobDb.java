@@ -182,15 +182,10 @@ public class MobDb {
         MobDb mobDb = new MobDb();
         mobDb.init();
 
-        System.out.println(mobDb.lookupItem("Spear"));
 //        System.out.println(mobDb.lookupMob("Fafi"));
-
-//        System.out.println(mobDb.askDropsByItem("SquirrelPelt"));
-//        System.out.println(mobDb.askDropsByItem("LeatherPatch"));
-//        System.out.println(mobDb.askDropsByItem("SilverOre"));
-//        System.out.println(mobDb.askDropsByMob("Centaur"));
-
-//        System.out.println(mobDb.lookupAndAsk("PileOfAsh"));
+//        System.out.println(mobDb.lookupItem("Reinboo"));
+//        System.out.println(mobDb.askDropsByMob("Forain"));
+//        System.out.println(mobDb.askDropsByItem("PileOfAsh"));
 //        System.out.println(mobDb.lookupAndAsk("CloverPatch"));
     }
 }
