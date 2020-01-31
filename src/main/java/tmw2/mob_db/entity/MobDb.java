@@ -183,9 +183,10 @@ public class MobDb {
         mobDb.init();
 
 //        System.out.println(mobDb.lookupMob("Fafi"));
-//        System.out.println(mobDb.lookupItem("Reinboo"));
+        System.out.println(mobDb.lookupItem("Orange"));
 //        System.out.println(mobDb.askDropsByMob("Forain"));
-//        System.out.println(mobDb.askDropsByItem("PileOfAsh"));
-//        System.out.println(mobDb.lookupAndAsk("CloverPatch"));
+        System.out.println(mobDb.askDropsByItem("Orange"));
+        System.out.println(mobDb.lookupAndAsk("RedApple"));
+//        System.out.println(mobDb.lookupAndAsk("Orange"));
     }
 }
